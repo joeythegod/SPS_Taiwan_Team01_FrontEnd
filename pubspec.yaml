@@ -26,6 +26,8 @@ dependencies:
   http:
   flutter_calendar_carousel:
   intl: ^0.16.1
+  flutter_progress_hud: ^1.0.2
+
 
 
 
