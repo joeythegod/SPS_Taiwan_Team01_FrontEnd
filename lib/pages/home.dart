@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'event.dart';
+import '../fetch.dart';
+
 
 class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    User _user = ModalRoute.of(context).settings.arguments;
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -34,7 +37,7 @@ class MainPage extends StatelessWidget {
             padding: EdgeInsets.zero,
             children: <Widget>[
               DrawerHeader(
-                child: Text('Hello user!'),
+                child: Text('Hello ${_user.username} ${_user.userid}!'),
                 decoration: BoxDecoration(
                   color: Colors.blue,
                 ),

@@ -18,47 +18,69 @@ class _RegisterPageState extends State<RegisterPage> {
     return ProgressHUD(
       backgroundColor: Colors.black87,
       child: Builder(
-        builder: (context) => Scaffold(
-          appBar: AppBar(
-            title: Text("Register"),
-          ),
-          body: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextField(
-                    controller: _controller_username,
-                    decoration: InputDecoration(hintText: 'Enter username'),
+        builder: (context) => WillPopScope(
+          onWillPop: () async {
+            return Navigator.canPop(context);
+          },
+          child:Scaffold(
+            appBar: AppBar(
+              title: Text("Register"),
+            ),
+            body: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      controller: _controller_username,
+                      decoration: InputDecoration(hintText: 'Enter username'),
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextField(
-                    controller: _controller_password,
-                    decoration: InputDecoration(hintText: 'Enter password'),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      controller: _controller_password,
+                      decoration: InputDecoration(hintText: 'Enter password'),
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextField(
-                    controller: _controller_email,
-                    decoration: InputDecoration(hintText: 'Enter email'),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      controller: _controller_email,
+                      decoration: InputDecoration(hintText: 'Enter email'),
+                    ),
                   ),
-                ),
-                RaisedButton(
-                  child: Text('Confirm'),
-                  onPressed: () {
-                    setState(() {
-                      _futureUser = createUser(_controller_username.text, _controller_password.text, _controller_email.text);
-                    });
-                  },
-                ),
-              ],
+                  RaisedButton(
+                    child: Text('Confirm'),
+                    onPressed: () {
+
+  //                    setState(() {
+  //                      _futureUser = createUser(_controller_username.text, _controller_password.text, _controller_email.text);
+  //                    });
+                      Navigator.pushReplacementNamed(context, "/login");
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
     );
   }
+//
+//  FutureBuilder _createUser() {
+//    return FutureBuilder<User>(
+//      future: _createUser(_controller_username.text, _controller_password.text, _controller_email.text),
+//      builder: (BuildContext context, AsyncSnapshot<List<Event>> snapshot) {
+//        if (snapshot.hasData) {
+//          List<Event> data = snapshot.data;
+//          return _event(data);
+//        } else if (snapshot.hasError) {
+//          return Text("${snapshot.error}");
+//        }
+//        return CircularProgressIndicator();
+//      },
+//    );
+//  }
 }

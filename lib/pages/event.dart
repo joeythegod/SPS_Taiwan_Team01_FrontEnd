@@ -35,19 +35,16 @@ class _EventPageState extends State<EventPage> {
 
   ListView _event(data) {
     return ListView.builder(
-        itemCount: data.length,
-        itemBuilder: (context, index) {
-          return Card(
-              child: _tile(
-                  data[index].title, data[index].startTime, data[index].endTime,
-                  Icons.calendar_today)
-          );
-        }
+      itemCount: data.length,
+      itemBuilder: (context, index) {
+        return Card(
+          child: _tile(data[index].title, data[index].startTime, data[index].endTime, Icons.calendar_today)
+        );
+      }
     );
   }
 
-  ListTile _tile(String title, DateTime startTime, DateTime endTime,
-      IconData icon) {
+  ListTile _tile(String title, DateTime startTime, DateTime endTime, IconData icon) {
     final f = new DateFormat('yyyy-MM-dd hh:mm a');
     return ListTile(
       title: Text(title,

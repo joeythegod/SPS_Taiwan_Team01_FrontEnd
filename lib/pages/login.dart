@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
+import '../fetch.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -9,6 +10,9 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
 
   bool _isHidden = true;
+  final TextEditingController _controller_username = TextEditingController();
+  final TextEditingController _controller_password = TextEditingController();
+  String _userid;
 
   void _toggleVisibility() {
     setState(() {
@@ -32,6 +36,7 @@ class _LoginPageState extends State<LoginPage> {
                   padding:
                     EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
                   child: TextFormField(
+                    controller: _controller_username,
                     decoration: const InputDecoration(
                       prefixIcon: Icon(Icons.person),
                       labelText: "Name *",
@@ -44,6 +49,7 @@ class _LoginPageState extends State<LoginPage> {
                   EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
                   child: TextFormField(
                     obscureText: _isHidden,
+                    controller: _controller_password,
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.lock),
                       suffixIcon: IconButton(
@@ -63,11 +69,13 @@ class _LoginPageState extends State<LoginPage> {
                   height: 48.0,
                   child: RaisedButton(
                     child: Text("Login"),
-                    onPressed: () {
+                    onPressed: () async {
+                      User _user;
+                      _user = await login(_controller_username.text, _controller_password.text);
                       final progress = ProgressHUD.of(context);
                       progress.showWithText("Loading...");
                       Future.delayed(Duration(seconds: 2), () {
-                        Navigator.pushReplacementNamed(context, "/home");
+                        Navigator.pushReplacementNamed(context, "/home", arguments: _user);
                         progress.dismiss();
                       });
                     },

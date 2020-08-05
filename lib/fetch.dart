@@ -37,8 +37,29 @@ Future<User> createUser(String username, String password, String email) async {
   );
   if (response.statusCode == 201) {
     return User.fromJson(json.decode(response.body));
-  } else {
+  }
+  else {
     throw Exception('Failed to create user.');
+  }
+}
+
+Future<User> login(String username, String password) async {
+  final http.Response response = await http.post(
+    url2,
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, String>{
+      'username': username,
+      'password': password,
+    }),
+  );
+  // Should be 200 ok
+  if (response.statusCode == 201) {
+    return User.fromJson(json.decode(response.body));
+  }
+  else {
+    throw Exception('Failed to login.');
   }
 }
 
@@ -46,14 +67,16 @@ class User {
   final String username;
   final String password;
   final String email;
+  final String userid;
 
-  User({this.username, this.password, this.email});
+  User({this.username, this.password, this.email, this.userid});
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       username: json['username'],
       password: json['password'],
       email: json['email'],
+      userid: json['id'],
     );
   }
 }
