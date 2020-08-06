@@ -20,7 +20,9 @@ class _RegisterPageState extends State<RegisterPage> {
       child: Builder(
         builder: (context) => WillPopScope(
           onWillPop: () async {
-            return Navigator.canPop(context);
+            Navigator.pushReplacementNamed(context, "/login");
+//            Navigator.pop(context);
+//            return Future.value(false);
           },
           child:Scaffold(
             appBar: AppBar(
@@ -53,7 +55,6 @@ class _RegisterPageState extends State<RegisterPage> {
                   RaisedButton(
                     child: Text('Confirm'),
                     onPressed: () {
-
   //                    setState(() {
   //                      _futureUser = createUser(_controller_username.text, _controller_password.text, _controller_email.text);
   //                    });

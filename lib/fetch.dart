@@ -55,7 +55,7 @@ Future<User> login(String username, String password) async {
     }),
   );
   // Should be 200 ok
-  if (response.statusCode == 201) {
+  if (response.statusCode == 2021) {
     return User.fromJson(json.decode(response.body));
   }
   else {
