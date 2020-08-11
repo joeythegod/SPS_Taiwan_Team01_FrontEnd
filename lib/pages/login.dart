@@ -10,9 +10,10 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
 
   bool _isHidden = true;
+  bool _loginSucceed = false;
+  User _data;
   final TextEditingController _controller_username = TextEditingController();
   final TextEditingController _controller_password = TextEditingController();
-  String _userid;
 
   void _toggleVisibility() {
     setState(() {
@@ -64,23 +65,48 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   height: 52.0,
                 ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width - 48.0,
-                  height: 48.0,
-                  child: RaisedButton(
-                    child: Text("Login"),
-                    onPressed: () async {
-                      User _user;
-                      _user = await login(_controller_username.text, _controller_password.text);
-                      final progress = ProgressHUD.of(context);
-                      progress.showWithText("Loading...");
-                      Future.delayed(Duration(seconds: 2), () {
-                        Navigator.pushReplacementNamed(context, "/home", arguments: _user);
-                        progress.dismiss();
-                      });
-                    },
-                  ),
+                RaisedButton(
+                  child: Text('Login'),
+                  onPressed: () async {
+                    await showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (context) => AlertDialog(
+                        content: _login(),
+                        actions: <Widget>[
+                          FlatButton(
+                            child: Text("OK"),
+                            onPressed: () {
+                              if (_loginSucceed) {
+                                Navigator.pushNamedAndRemoveUntil(context, "/home",  ModalRoute.withName('/'), arguments: _data);
+                              }
+                              else {
+                                Navigator.pop(context);
+                              }
+                            }
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                 ),
+//                SizedBox(
+//                  width: MediaQuery.of(context).size.width - 48.0,
+//                  height: 48.0,
+//                  child: RaisedButton(
+//                    child: Text("Login"),
+//                    onPressed: () async {
+//                      User _user;
+//                      _user = await login(_controller_username.text, _controller_password.text);
+//                      final progress = ProgressHUD.of(context);
+//                      progress.showWithText("Loading...");
+//                      Future.delayed(Duration(seconds: 2), () {
+//                        Navigator.pushReplacementNamed(context, "/home", arguments: _user);
+//                        progress.dismiss();
+//                      });
+//                    },
+//                  ),
+//                ),
                 SizedBox(
                   height: 52.0,
                 ),
@@ -104,6 +130,22 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       ),
+    );
+  }
+
+  FutureBuilder _login() {
+    return FutureBuilder<User>(
+      future: login(_controller_username.text, _controller_password.text),
+      builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+        if (snapshot.hasData) {
+          _data = snapshot.data;
+          _loginSucceed = true;
+          return Text(_data.userid);
+        } else if (snapshot.hasError) {
+          return Text("${snapshot.error}");
+        }
+        return CircularProgressIndicator();
+      },
     );
   }
 }

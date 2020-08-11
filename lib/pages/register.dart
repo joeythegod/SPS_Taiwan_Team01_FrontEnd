@@ -11,7 +11,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _controller_username = TextEditingController();
   final TextEditingController _controller_password = TextEditingController();
   final TextEditingController _controller_email = TextEditingController();
-  Future<User> _futureUser;
+  bool _registerSucceed = false;
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +21,6 @@ class _RegisterPageState extends State<RegisterPage> {
         builder: (context) => WillPopScope(
           onWillPop: () async {
             Navigator.pushReplacementNamed(context, "/login");
-//            Navigator.pop(context);
-//            return Future.value(false);
           },
           child:Scaffold(
             appBar: AppBar(
@@ -54,11 +52,27 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   RaisedButton(
                     child: Text('Confirm'),
-                    onPressed: () {
-  //                    setState(() {
-  //                      _futureUser = createUser(_controller_username.text, _controller_password.text, _controller_email.text);
-  //                    });
-                      Navigator.pushReplacementNamed(context, "/login");
+                    onPressed: () async {
+                      await showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (context) => AlertDialog(
+                          content: _createUser(),
+                          actions: <Widget>[
+                            FlatButton(
+                              child: Text("OK"),
+                              onPressed: () {
+                                if (_registerSucceed) {
+                                  Navigator.pushNamedAndRemoveUntil(context, "/login",  ModalRoute.withName('/'));
+                                }
+                                else {
+                                  Navigator.pop(context);
+                                }
+                              }
+                            ),
+                          ],
+                        ),
+                      );
                     },
                   ),
                 ],
@@ -69,19 +83,20 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
-//
-//  FutureBuilder _createUser() {
-//    return FutureBuilder<User>(
-//      future: _createUser(_controller_username.text, _controller_password.text, _controller_email.text),
-//      builder: (BuildContext context, AsyncSnapshot<List<Event>> snapshot) {
-//        if (snapshot.hasData) {
-//          List<Event> data = snapshot.data;
-//          return _event(data);
-//        } else if (snapshot.hasError) {
-//          return Text("${snapshot.error}");
-//        }
-//        return CircularProgressIndicator();
-//      },
-//    );
-//  }
+
+  FutureBuilder _createUser() {
+    return FutureBuilder<User>(
+      future: createUser(_controller_username.text, _controller_password.text, _controller_email.text),
+      builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+        if (snapshot.hasData) {
+          User data = snapshot.data;
+          _registerSucceed = true;
+          return Text(data.userid);
+        } else if (snapshot.hasError) {
+          return Text("${snapshot.error}");
+        }
+        return CircularProgressIndicator();
+      },
+    );
+  }
 }
