@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 const url_user = 'https://5f212e69daa42f00166656c2.mockapi.io/api/v1/username';
+//const url_user = 'https://jlee-sps-summer20.df.r.appspot.com/login';
 const url_event = 'https://5f212e69daa42f00166656c2.mockapi.io/api/v1/getEvents';
 
 // User Section
@@ -25,10 +26,6 @@ class User {
 }
 
 Future<User> login(String username, String password) async {
-  print(jsonEncode(<String, String>{
-    'username': username,
-    'password': password,
-  }));
   final http.Response response = await http.post(
     url_user,
     headers: <String, String>{

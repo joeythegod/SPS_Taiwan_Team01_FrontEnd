@@ -90,23 +90,6 @@ class _LoginPageState extends State<LoginPage> {
                     );
                   },
                 ),
-//                SizedBox(
-//                  width: MediaQuery.of(context).size.width - 48.0,
-//                  height: 48.0,
-//                  child: RaisedButton(
-//                    child: Text("Login"),
-//                    onPressed: () async {
-//                      User _user;
-//                      _user = await login(_controller_username.text, _controller_password.text);
-//                      final progress = ProgressHUD.of(context);
-//                      progress.showWithText("Loading...");
-//                      Future.delayed(Duration(seconds: 2), () {
-//                        Navigator.pushReplacementNamed(context, "/home", arguments: _user);
-//                        progress.dismiss();
-//                      });
-//                    },
-//                  ),
-//                ),
                 SizedBox(
                   height: 52.0,
                 ),
@@ -116,12 +99,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: RaisedButton(
                     child: Text("Register Now!"),
                     onPressed: () {
-                      final progress = ProgressHUD.of(context);
-                      progress.showWithText("Loading...");
-                      Future.delayed(Duration(seconds: 2), () {
-                        Navigator.pushReplacementNamed(context, "/register");
-                        progress.dismiss();
-                      });
+                      Navigator.pushReplacementNamed(context, "/register");
                     },
                   ),
                 ),
@@ -140,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
         if (snapshot.hasData) {
           _data = snapshot.data;
           _loginSucceed = true;
-          return Text(_data.userid);
+          return Text('You login as ${_data.username}');
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
         }

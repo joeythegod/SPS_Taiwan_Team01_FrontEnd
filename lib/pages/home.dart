@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'event.dart';
 import '../fetch.dart';
 
@@ -29,15 +30,51 @@ class MainPage extends StatelessWidget {
         body: TabBarView(
           children: <Widget>[
             EventPage(),
-            Text("Calendar"),
+            Text("Calendar to do"),
           ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            DateTime startTime;
+            DateTime endTime;
+            startTime = await DatePicker.showDateTimePicker(context,
+                showTitleActions: true,
+                minTime: DateTime(2018, 1, 1, 0, 0),
+                maxTime: DateTime(2025, 12, 31, 23, 59),
+                onChanged: (date) {
+                  print('change $date in time zone ' + date.timeZoneOffset.inHours.toString());
+                },
+                onConfirm: (date) {
+                  print('confirm $date');
+                },
+                currentTime: DateTime.now(),
+                locale: LocaleType.zh);
+            endTime = await DatePicker.showDateTimePicker(context,
+                showTitleActions: true,
+                minTime: DateTime(2018, 1, 1, 0, 0),
+                maxTime: DateTime(2025, 12, 31, 23, 59),
+                onChanged: (date) {
+                  print('change $date in time zone ' + date.timeZoneOffset.inHours.toString());
+                },
+                onConfirm: (date) {
+                  print('confirm $date');
+                },
+                currentTime: DateTime.now(),
+                locale: LocaleType.zh);
+            
+            print(startTime);
+            print(endTime);
+          },
+          child: Icon(Icons.add),
+          backgroundColor: Colors.green,
         ),
         drawer: Drawer(
           child: ListView(
             padding: EdgeInsets.zero,
             children: <Widget>[
               DrawerHeader(
-                child: Text('Hello ${_user.username} ${_user.userid}!'),
+                child:
+                  Text('Hello ${_user.username}!\n\nEmail: ${_user.email}'),
                 decoration: BoxDecoration(
                   color: Colors.blue,
                 ),

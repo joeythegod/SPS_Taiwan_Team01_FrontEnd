@@ -19,7 +19,7 @@ class _RegisterPageState extends State<RegisterPage> {
       backgroundColor: Colors.black87,
       child: Builder(
         builder: (context) => WillPopScope(
-          onWillPop: () async {
+          onWillPop: () {
             Navigator.pushReplacementNamed(context, "/login");
           },
           child:Scaffold(
