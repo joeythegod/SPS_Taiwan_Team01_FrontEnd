@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:intl/intl.dart';
 import 'event.dart';
 import '../fetch.dart';
 
+class MainPage extends StatefulWidget {
+  @override
+  _MainPageState createState() => _MainPageState();
+}
 
-class MainPage extends StatelessWidget {
+class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     User _user = ModalRoute.of(context).settings.arguments;
@@ -35,35 +40,52 @@ class MainPage extends StatelessWidget {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
-            DateTime startTime;
-            DateTime endTime;
-            startTime = await DatePicker.showDateTimePicker(context,
-                showTitleActions: true,
-                minTime: DateTime(2018, 1, 1, 0, 0),
-                maxTime: DateTime(2025, 12, 31, 23, 59),
-                onChanged: (date) {
-                  print('change $date in time zone ' + date.timeZoneOffset.inHours.toString());
-                },
-                onConfirm: (date) {
-                  print('confirm $date');
-                },
-                currentTime: DateTime.now(),
-                locale: LocaleType.zh);
-            endTime = await DatePicker.showDateTimePicker(context,
-                showTitleActions: true,
-                minTime: DateTime(2018, 1, 1, 0, 0),
-                maxTime: DateTime(2025, 12, 31, 23, 59),
-                onChanged: (date) {
-                  print('change $date in time zone ' + date.timeZoneOffset.inHours.toString());
-                },
-                onConfirm: (date) {
-                  print('confirm $date');
-                },
-                currentTime: DateTime.now(),
-                locale: LocaleType.zh);
-            
-            print(startTime);
-            print(endTime);
+            final TextEditingController _controller_title =
+                TextEditingController();
+            final TextEditingController _controller_startTime = TextEditingController();
+
+            await showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) => SimpleDialog(
+                title: Text('Create Event'),
+                children: <Widget>[
+                  ListTile(
+                    leading: Icon(Icons.text_fields),
+                    title: TextFormField(
+                      controller: _controller_title,
+                      decoration: const InputDecoration(
+                        labelText: "Title *",
+                        hintText: "Your title",
+                      ),
+                    ),
+                  ),
+                  timeListTile(controller_startTime: _controller_startTime),
+                  ListTile(
+                    leading: Icon(Icons.timer),
+                    title: Text('endTime'),
+                    onTap: () {},
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.text_format),
+                    title: Text('content'),
+                    onTap: () {},
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.cancel),
+                    title: Text('Cancelled'),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.send),
+                    title: Text('OK'),
+                    onTap: () {},
+                  ),
+                ],
+              ),
+            );
           },
           child: Icon(Icons.add),
           backgroundColor: Colors.green,
@@ -74,7 +96,7 @@ class MainPage extends StatelessWidget {
             children: <Widget>[
               DrawerHeader(
                 child:
-                  Text('Hello ${_user.username}!\n\nEmail: ${_user.email}'),
+                    Text('Hello ${_user.username}!\n\nEmail: ${_user.email}'),
                 decoration: BoxDecoration(
                   color: Colors.blue,
                 ),
@@ -106,6 +128,62 @@ class MainPage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+//  FutureBuilder _createEvent() {
+//    return FutureBuilder<List<Event>>(
+//      future: createEvent(_user.userid, ),
+//      builder: (BuildContext context, AsyncSnapshot<List<Event>> snapshot) {
+//        if (snapshot.hasData) {
+//          List<Event> data = snapshot.data;
+//          return _event(data);
+//        } else if (snapshot.hasError) {
+//          return Text("${snapshot.error}");
+//        }
+//        return CircularProgressIndicator();
+//      },
+//    );
+//  }
+}
+
+class timeListTile extends StatefulWidget {
+  const timeListTile({
+    Key key,
+    @required this.controller_startTime,
+  }) : super(key: key);
+
+  final TextEditingController controller_startTime;
+  @override
+  _timeListTileState createState() => _timeListTileState();
+}
+
+class _timeListTileState extends State<timeListTile> {
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Icon(Icons.timer),
+      title: Text('${widget.controller_startTime.text}'),
+      onTap: () {
+        DatePicker.showDateTimePicker(
+          context,
+          showTitleActions: true,
+          minTime: DateTime(2018, 1, 1, 0, 0),
+          maxTime: DateTime(2025, 12, 31, 23, 59),
+          onChanged: (date) {
+            print('change $date in time zone ');
+          },
+          onConfirm: (date) {
+            print('confirm $date');
+            setState(() {
+              widget.controller_startTime.text =
+                  '${DateFormat('yyyy-MM-dd kk:mm').format(date)}';
+            });
+          },
+          currentTime: DateTime.now(),
+          locale: LocaleType.zh,
+        );
+      },
     );
   }
 }

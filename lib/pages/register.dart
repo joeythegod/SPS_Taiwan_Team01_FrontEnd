@@ -91,7 +91,7 @@ class _RegisterPageState extends State<RegisterPage> {
         if (snapshot.hasData) {
           User data = snapshot.data;
           _registerSucceed = true;
-          return Text(data.userid);
+          return Text(data.userId);
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
         }

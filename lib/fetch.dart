@@ -2,47 +2,41 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-const url_user = 'https://5f212e69daa42f00166656c2.mockapi.io/api/v1/username';
-//const url_user = 'https://jlee-sps-summer20.df.r.appspot.com/login';
+//const url_user = 'https://5f212e69daa42f00166656c2.mockapi.io/api/v1/username';
+const url_user = 'https://jlee-sps-summer20.df.r.appspot.com/';
+
 const url_event = 'https://5f212e69daa42f00166656c2.mockapi.io/api/v1/getEvents';
+//const url_event = "https://tfang-sps-summer20.appspot.com/";
 
 // User Section
 class User {
   final String username;
   final String password;
   final String email;
-  final String userid;
+  final String userId;
 
-  User({this.username, this.password, this.email, this.userid});
+  User({this.username, this.password, this.email, this.userId});
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       username: json['username'],
       password: json['password'],
       email: json['email'],
-      userid: json['id'],
+      userId: json['userId'],
     );
   }
 }
 
 Future<User> login(String username, String password) async {
   final http.Response response = await http.post(
-    url_user,
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode(<String, String>{
+    url_user+'login',
+    body: {
       'username': username,
       'password': password,
-    }),
+    },
   );
-  // Should be 200 ok
-  if (response.statusCode == 201) {
+  if (response.statusCode >= 200 && response.statusCode <= 210) {
     return User.fromJson(json.decode(response.body));
-  }
-  else if (response.statusCode == 302) {
-    print(response.headers['location']);
-    throw Exception('Failed to redirect.');
   }
   else {
     throw Exception('Failed to login.');
@@ -51,17 +45,14 @@ Future<User> login(String username, String password) async {
 
 Future<User> createUser(String username, String password, String email) async {
   final http.Response response = await http.post(
-    url_user,
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode(<String, String>{
+    url_user+'register',
+    body: {
       'username': username,
       'password': password,
       'email': email,
-    }),
+    },
   );
-  if (response.statusCode == 201) {
+  if (response.statusCode >= 200 && response.statusCode <= 210) {
     return User.fromJson(json.decode(response.body));
   }
   else {
