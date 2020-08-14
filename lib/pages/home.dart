@@ -43,7 +43,9 @@ class _MainPageState extends State<MainPage> {
             final TextEditingController _controller_title =
                 TextEditingController();
             final TextEditingController _controller_startTime = TextEditingController();
-
+            final TextEditingController _controller_endTime = TextEditingController();
+            _controller_startTime.text = '${DateFormat('yyyy-MM-dd kk:mm').format(DateTime.now())}';
+            _controller_endTime.text = '${DateFormat('yyyy-MM-dd kk:mm').format(DateTime.now())}';
             await showDialog(
               context: context,
               barrierDismissible: false,
@@ -60,12 +62,8 @@ class _MainPageState extends State<MainPage> {
                       ),
                     ),
                   ),
-                  timeListTile(controller_startTime: _controller_startTime),
-                  ListTile(
-                    leading: Icon(Icons.timer),
-                    title: Text('endTime'),
-                    onTap: () {},
-                  ),
+                  timeListTile(title: 'startTime', controller_time: _controller_startTime),
+                  timeListTile(title: 'endTime', controller_time: _controller_endTime),
                   ListTile(
                     leading: Icon(Icons.text_format),
                     title: Text('content'),
@@ -150,10 +148,12 @@ class _MainPageState extends State<MainPage> {
 class timeListTile extends StatefulWidget {
   const timeListTile({
     Key key,
-    @required this.controller_startTime,
+    @required this.title,
+    @required this.controller_time,
   }) : super(key: key);
 
-  final TextEditingController controller_startTime;
+  final String title;
+  final TextEditingController controller_time;
   @override
   _timeListTileState createState() => _timeListTileState();
 }
@@ -163,7 +163,8 @@ class _timeListTileState extends State<timeListTile> {
   Widget build(BuildContext context) {
     return ListTile(
       leading: Icon(Icons.timer),
-      title: Text('${widget.controller_startTime.text}'),
+      title: Text('${widget.title}'),
+      subtitle: Text('${widget.controller_time.text}'),
       onTap: () {
         DatePicker.showDateTimePicker(
           context,
@@ -176,7 +177,7 @@ class _timeListTileState extends State<timeListTile> {
           onConfirm: (date) {
             print('confirm $date');
             setState(() {
-              widget.controller_startTime.text =
+              widget.controller_time.text =
                   '${DateFormat('yyyy-MM-dd kk:mm').format(date)}';
             });
           },
