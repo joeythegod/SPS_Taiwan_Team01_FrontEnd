@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+
 
 //const url_user = 'https://5f212e69daa42f00166656c2.mockapi.io/api/v1/username';
 const url_user = 'https://jlee-sps-summer20.df.r.appspot.com/';
 
-const url_event = 'https://5f212e69daa42f00166656c2.mockapi.io/api/v1/getEvents';
-//const url_event = "https://tfang-sps-summer20.appspot.com/";
+//const url_event = 'https://5f212e69daa42f00166656c2.mockapi.io/api/v1/getEvents';
+const url_event = "https://tfang-sps-summer20.appspot.com/";
 
 // User Section
 class User {
@@ -62,28 +64,27 @@ Future<User> createUser(String username, String password, String email) async {
 
 //Event
 class Event {
-  final String id;
+  final String userId;
   final String title;
-  final DateTime startTime;
-  final DateTime endTime;
+  final String startTime;
+  final String endTime;
   final String content;
 
-  Event({this.id, this.title, this.startTime, this.endTime, this.content});
+  Event({this.userId, this.title, this.startTime, this.endTime, this.content});
 
   factory Event.fromJson(Map<String, dynamic> json) {
     return Event(
-      id: json['id'],
+      userId: json['userId'],
       title: json['title'],
-      startTime: DateTime.fromMicrosecondsSinceEpoch(json['startTime']*1000),
-      endTime: DateTime.fromMicrosecondsSinceEpoch(json['endTime']*1000),
+      startTime: json['startTime'],
+      endTime: json['endTime'],
       content: json['content'],
     );
   }
 }
 
-Future<List<Event>> fetchEvent() async {
-  final response = await http.get(url_event);
-
+Future<List<Event>> fetchEvent(String userId) async {
+  final response = await http.get(url_event + "?userId=" + userId);
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,
     // then parse the JSON.
@@ -97,22 +98,20 @@ Future<List<Event>> fetchEvent() async {
   }
 }
 
-Future<Event> createEvent(String userid, String title, DateTime startTime, DateTime endTime, String content) async {
+Future<String> createEvent(String userId, String title, String startTime, String endTime, String content) async {
   final http.Response response = await http.post(
     url_event,
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode(<String, dynamic>{
-      'userid': userid,
+    body: {
+      'userId': userId,
       'title': title,
       'startTime': startTime,
       'endTime': endTime,
       'content': content,
-    }),
+    },
   );
-  if (response.statusCode == 201) {
-    return Event.fromJson(json.decode(response.body));
+
+  if (response.statusCode >= 200 && response.statusCode <= 210) {
+    return json.decode(response.body);
   }
   else {
     throw Exception('Failed to create event.');

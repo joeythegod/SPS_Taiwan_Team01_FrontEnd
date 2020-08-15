@@ -34,18 +34,19 @@ class _MainPageState extends State<MainPage> {
         ),
         body: TabBarView(
           children: <Widget>[
-            EventPage(),
+            EventPage(userId: _user.userId),
             Text("Calendar to do"),
           ],
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
-            final TextEditingController _controller_title =
-                TextEditingController();
+            final TextEditingController _controller_title = TextEditingController();
             final TextEditingController _controller_startTime = TextEditingController();
             final TextEditingController _controller_endTime = TextEditingController();
-            _controller_startTime.text = '${DateFormat('yyyy-MM-dd kk:mm').format(DateTime.now())}';
-            _controller_endTime.text = '${DateFormat('yyyy-MM-dd kk:mm').format(DateTime.now())}';
+            final TextEditingController _controller_content = TextEditingController();
+            _controller_startTime.text = '${DateFormat('yyyy-MM-dd kk:mm:ss').format(DateTime.now())}';
+            _controller_endTime.text = '${DateFormat('yyyy-MM-dd kk:mm:ss').format(DateTime.now())}';
+
             await showDialog(
               context: context,
               barrierDismissible: false,
@@ -66,7 +67,14 @@ class _MainPageState extends State<MainPage> {
                   timeListTile(title: 'endTime', controller_time: _controller_endTime),
                   ListTile(
                     leading: Icon(Icons.text_format),
-                    title: Text('content'),
+                    title: TextFormField(
+                        controller: _controller_content,
+                        decoration: const InputDecoration(
+                          labelText: "Content *",
+                          hintText: "Your content",
+                        ),
+                        maxLines: 1,
+                    ),
                     onTap: () {},
                   ),
                   ListTile(
@@ -78,8 +86,26 @@ class _MainPageState extends State<MainPage> {
                   ),
                   ListTile(
                     leading: Icon(Icons.send),
-                    title: Text('OK'),
-                    onTap: () {},
+                    title: Text('Create!'),
+                    onTap: () async {
+                      await showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (context) => AlertDialog(
+                          content: _createEvent(_user.userId, _controller_title.text, _controller_startTime.text, _controller_endTime.text, _controller_content.text),
+                          actions: <Widget>[
+                            FlatButton(
+                                child: Text("OK"),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+//                                  Navigator.pushNamedAndRemoveUntil(context, "/home",  ModalRoute.withName('/'));
+                                }
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -129,20 +155,20 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-//  FutureBuilder _createEvent() {
-//    return FutureBuilder<List<Event>>(
-//      future: createEvent(_user.userid, ),
-//      builder: (BuildContext context, AsyncSnapshot<List<Event>> snapshot) {
-//        if (snapshot.hasData) {
-//          List<Event> data = snapshot.data;
-//          return _event(data);
-//        } else if (snapshot.hasError) {
-//          return Text("${snapshot.error}");
-//        }
-//        return CircularProgressIndicator();
-//      },
-//    );
-//  }
+  FutureBuilder _createEvent(String userId, String title, String startTime, String endTime, String content) {
+    return FutureBuilder<String>(
+      future: createEvent(userId, title, startTime,
+          endTime, content),
+      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+        if (snapshot.hasData) {
+          return Text('Created successfully!');
+        } else if (snapshot.hasError) {
+          return Text("${snapshot.error}");
+        }
+        return CircularProgressIndicator();
+      },
+    );
+  }
 }
 
 class timeListTile extends StatefulWidget {
@@ -178,7 +204,7 @@ class _timeListTileState extends State<timeListTile> {
             print('confirm $date');
             setState(() {
               widget.controller_time.text =
-                  '${DateFormat('yyyy-MM-dd kk:mm').format(date)}';
+                  '${DateFormat('yyyy-MM-dd kk:mm:ss').format(date)}';
             });
           },
           currentTime: DateTime.now(),

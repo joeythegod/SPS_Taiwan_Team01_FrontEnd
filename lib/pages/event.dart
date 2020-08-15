@@ -3,6 +3,11 @@ import '../fetch.dart';
 import 'package:intl/intl.dart';
 
 class EventPage extends StatefulWidget {
+  const EventPage({
+    Key key,
+    @required this.userId,
+  }) : super(key: key);
+  final String userId;
   @override
   _EventPageState createState() => _EventPageState();
 }
@@ -13,14 +18,14 @@ class _EventPageState extends State<EventPage> {
     return RefreshIndicator (
       child: _eventData(),
       onRefresh: () async {
-        print('refresh');
+        fetchEvent(widget.userId);
       },
     );
   }
 
   FutureBuilder _eventData() {
     return FutureBuilder<List<Event>>(
-      future: fetchEvent(),
+      future: fetchEvent(widget.userId),
       builder: (BuildContext context, AsyncSnapshot<List<Event>> snapshot) {
         if (snapshot.hasData) {
           List<Event> data = snapshot.data;
@@ -44,15 +49,14 @@ class _EventPageState extends State<EventPage> {
     );
   }
 
-  ListTile _tile(String title, DateTime startTime, DateTime endTime, IconData icon) {
-    final f = new DateFormat('yyyy-MM-dd hh:mm a');
+  ListTile _tile(String title, String startTime, String endTime, IconData icon) {
     return ListTile(
       title: Text(title,
           style: TextStyle(
             fontWeight: FontWeight.w500,
             fontSize: 20,
           )),
-      subtitle: Text(f.format(startTime) + ' ~ ' + f.format(endTime)),
+      subtitle: Text(startTime + ' ~ ' + endTime),
       leading: Icon(
         icon,
         color: Colors.red[500],
