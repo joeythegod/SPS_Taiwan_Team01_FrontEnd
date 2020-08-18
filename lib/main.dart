@@ -1,8 +1,8 @@
 import "package:flutter/material.dart";
-import "pages/login.dart";
-import "pages/home.dart";
-import "pages/routes.dart";
-import "pages/register.dart";
+import "package:first_flutter_project/utils/routes.dart";
+import "package:first_flutter_project/screens/login.dart";
+import "package:first_flutter_project/screens/home.dart";
+import "package:first_flutter_project/screens/register.dart";
 
 
 void main() => runApp(myApp());
@@ -17,7 +17,7 @@ class myApp extends StatelessWidget {
       ),
       routes: {
         AppRoutes.login: (context) => LoginPage(),
-        AppRoutes.home: (context) => MainPage(),
+        AppRoutes.home: (context) => HomePage(),
         AppRoutes.register: (context) => RegisterPage(),
 
       },

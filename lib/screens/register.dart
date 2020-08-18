@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
-import '../fetch.dart';
+import 'package:first_flutter_project/https/api.dart';
+import 'package:first_flutter_project/models/user.dart';
+
 
 class RegisterPage extends StatefulWidget {
   @override

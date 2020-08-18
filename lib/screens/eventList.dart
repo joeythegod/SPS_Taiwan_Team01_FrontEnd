@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
-import '../fetch.dart';
-import 'package:intl/intl.dart';
+import 'package:first_flutter_project/https/api.dart';
+import 'package:first_flutter_project/models/event.dart';
 
-class EventPage extends StatefulWidget {
-  const EventPage({
+
+class EventListPage extends StatefulWidget {
+  const EventListPage({
     Key key,
     @required this.userId,
   }) : super(key: key);
   final String userId;
   @override
-  _EventPageState createState() => _EventPageState();
+  _EventListPageState createState() => _EventListPageState();
 }
 
-class _EventPageState extends State<EventPage> {
+class _EventListPageState extends State<EventListPage> {
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator (
