@@ -15,17 +15,13 @@ Future<User> login(String username, String password) async {
   );
   if (response.statusCode >= 200 && response.statusCode <= 210) {
     return User.fromJson(json.decode(response.body));
-  }
-  else if (response.statusCode == 401) {
+  } else if (response.statusCode == 401) {
     throw Exception('Password incorrect!');
-  }
-  else if (response.statusCode == 404) {
+  } else if (response.statusCode == 404) {
     throw Exception('Username not found!');
-  }
-  else if (response.statusCode >= 500) {
+  } else if (response.statusCode >= 500) {
     throw Exception('Server error');
-  }
-  else {
+  } else {
     throw Exception('Failed to login.');
   }
 }
@@ -42,64 +38,66 @@ Future<User> createUser(String username, String password, String email) async {
   );
   if (response.statusCode >= 200 && response.statusCode <= 210) {
     return User.fromJson(json.decode(response.body));
-  }
-  else if (response.statusCode == 400) {
+  } else if (response.statusCode == 400) {
     throw Exception('Inputs are empty or null');
-  }
-  else if (response.statusCode == 401) {
+  } else if (response.statusCode == 401) {
     throw Exception('This user has been registered');
-  }
-  else if (response.statusCode >= 500) {
+  } else if (response.statusCode >= 500) {
     throw Exception('Server error');
-  }
-  else {
+  } else {
     throw Exception('Failed to create user.');
   }
 }
 
 // Fetch all event by userId
 Future<List<Event>> fetchEvent(String userId) async {
-  final response = await http.get(
-      "https://tfang-sps-summer20.appspot.com/?userId=" + userId);
+  final response = await http
+      .get("https://tfang-sps-summer20.appspot.com/event?userId=${userId}");
   if (response.statusCode >= 200 && response.statusCode <= 210) {
     List data = jsonDecode(response.body);
     return data.map((event) => new Event.fromJson(event)).toList();
-  }
-  else if (response.statusCode >= 500) {
+  } else if (response.statusCode >= 500) {
     throw Exception('Server error');
-  }
-  else {
+  } else {
     throw Exception('Failed to load');
   }
 }
 
 // Create new event
-Future<String> createEvent(String userId, String title, String startTime, String endTime, String content) async {
+Future<String> createEvent(String userId, String title, String startTime,
+    String endTime, String content) async {
   final http.Response response = await http.post(
-    "https://tfang-sps-summer20.appspot.com",
+    "https://tfang-sps-summer20.appspot.com/event",
     body: {
       'userId': userId,
       'title': title,
-      'startTime': startTime,
-      'endTime': endTime,
+      'startTime': startTime + ':00',
+      'endTime': endTime + ':00',
       'content': content,
     },
   );
 
   if (response.statusCode >= 200 && response.statusCode <= 210) {
     return json.decode(response.body);
-  }
-  else if (response.statusCode == 401) {
+  } else if (response.statusCode == 401 || response.statusCode == 406) {
     throw Exception('startTime/endTime not possible');
-  }
-  else if (response.statusCode == 404) {
+  } else if (response.statusCode == 404) {
     throw Exception('title cannot be empty');
-  }
-  else if (response.statusCode >= 500) {
+  } else if (response.statusCode >= 500) {
     throw Exception('Server error');
-  }
-  else {
+  } else {
     throw Exception('Failed to create event.');
   }
 }
 
+Future<String> deleteEvent(String userId, String eventId) async {
+  final http.Response response = await http.delete(
+      "https://tfang-sps-summer20.appspot.com/event?userId=${userId}&eventId=${eventId}");
+  if (response.statusCode >= 200 && response.statusCode <= 210) {
+    return response.body;
+  } else if (response.statusCode >= 500) {
+    throw Exception('Server error');
+  } else {
+    throw Exception('Failed to load');
+  }
+}

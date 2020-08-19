@@ -65,7 +65,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               child: Text("OK"),
                               onPressed: () {
                                 if (_registerSucceed) {
-                                  Navigator.pushNamedAndRemoveUntil(context, "/login",  ModalRoute.withName('/'));
+                                  Navigator.pushNamed(context, "/login");
                                 }
                                 else {
                                   Navigator.pop(context);

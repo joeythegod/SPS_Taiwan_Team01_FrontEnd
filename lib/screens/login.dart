@@ -13,7 +13,7 @@ class _LoginPageState extends State<LoginPage> {
 
   bool _isHidden = true;
   bool _loginSucceed = false;
-  User _data;
+  User _user;
   final TextEditingController _controller_username = TextEditingController();
   final TextEditingController _controller_password = TextEditingController();
 
@@ -80,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
                             child: Text("OK"),
                             onPressed: () {
                               if (_loginSucceed) {
-                                Navigator.pushNamedAndRemoveUntil(context, "/home",  ModalRoute.withName('/'), arguments: _data);
+                                Navigator.pushNamed(context, "/home", arguments: _user);
                               }
                               else {
                                 Navigator.pop(context);
@@ -118,9 +118,9 @@ class _LoginPageState extends State<LoginPage> {
       future: login(_controller_username.text, _controller_password.text),
       builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
         if (snapshot.hasData) {
-          _data = snapshot.data;
+          _user = snapshot.data;
           _loginSucceed = true;
-          return Text('You login as ${_data.username}');
+          return Text('You login as ${_user.username}');
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
         }

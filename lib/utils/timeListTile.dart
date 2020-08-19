@@ -35,7 +35,7 @@ class _timeListTileState extends State<timeListTile> {
             print('confirm $date');
             setState(() {
               widget.controller_time.text =
-              '${DateFormat('yyyy-MM-dd kk:mm:ss').format(date)}';
+              '${DateFormat('yyyy-MM-dd kk:mm').format(date)}';
             });
           },
           currentTime: DateTime.now(),

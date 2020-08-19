@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:first_flutter_project/models/user.dart';
+import 'package:first_flutter_project/models/event.dart';
 import 'package:first_flutter_project/screens/eventList.dart';
 import 'package:first_flutter_project/utils/createEventFloatingButton.dart';
+import 'package:first_flutter_project/https/api.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -13,6 +15,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     User _user = ModalRoute.of(context).settings.arguments;
+    dynamic eventList = _getEventData(_user);
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -27,14 +30,18 @@ class _HomePageState extends State<HomePage> {
           ),
           actions: <Widget>[
             IconButton(
-              icon: Icon(Icons.search),
-              onPressed: () {},
+              icon: Icon(Icons.refresh),
+              onPressed: () {
+                setState(() {
+                  eventList = _getEventData(_user);
+                });
+              },
             )
           ],
         ),
         body: TabBarView(
           children: <Widget>[
-            EventListPage(userId: _user.userId),
+            eventList,
             Text("Calendar to do"),
           ],
         ),
@@ -77,6 +84,21 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
+    );
+  }
+
+  FutureBuilder _getEventData(User user) {
+    return FutureBuilder<List<Event>>(
+      future: fetchEvent(user.userId),
+      builder: (BuildContext context, AsyncSnapshot<List<Event>> snapshot) {
+        if (snapshot.hasData) {
+          List<Event> data = snapshot.data;
+          return eventListPage(data: data);
+        } else if (snapshot.hasError) {
+          return Text("${snapshot.error}");
+        }
+        return CircularProgressIndicator();
+      },
     );
   }
 }

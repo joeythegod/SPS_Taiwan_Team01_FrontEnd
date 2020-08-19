@@ -24,8 +24,8 @@ class _createEventFloatingButtonState extends State<createEventFloatingButton> {
         final TextEditingController _controller_startTime = TextEditingController();
         final TextEditingController _controller_endTime = TextEditingController();
         final TextEditingController _controller_content = TextEditingController();
-        _controller_startTime.text = '${DateFormat('yyyy-MM-dd kk:mm:ss').format(DateTime.now())}';
-        _controller_endTime.text = '${DateFormat('yyyy-MM-dd kk:mm:ss').format(DateTime.now())}';
+        _controller_startTime.text = '${DateFormat('yyyy-MM-dd kk:mm').format(DateTime.now())}';
+        _controller_endTime.text = '${DateFormat('yyyy-MM-dd kk:mm').format(DateTime.now())}';
 
         await showDialog(
           context: context,
