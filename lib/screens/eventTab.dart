@@ -1,46 +1,64 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
 import 'package:first_flutter_project/models/event.dart';
+import 'package:first_flutter_project/models/user.dart';
+import 'package:first_flutter_project/models/friend.dart';
 import 'package:first_flutter_project/https/api.dart';
+import 'package:image_picker/image_picker.dart';
 
-class eventListPage extends StatefulWidget {
-  const eventListPage({
+class eventTab extends StatefulWidget {
+  const eventTab({
     Key key,
-    @required this.data,
+    @required this.events,
+    @required this.user,
+    @required this.viewOnly,
+    this.friend,
   }) : super(key: key);
-  final List<Event> data;
+  final List<Event> events;
+  final User user;
+  final bool viewOnly;
+  final Friend friend;
   @override
-  _eventListPageState createState() => _eventListPageState();
+  _eventTabState createState() => _eventTabState();
 }
 
-class _eventListPageState extends State<eventListPage> {
+class _eventTabState extends State<eventTab> {
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      child: _event(widget.data),
-      onRefresh: () async {
-      },
+    return Container(
+      child: _event(widget.events),
     );
   }
 
-  ListView _event(data) {
+  ListView _event(events) {
     return ListView.builder(
-      itemCount: data.length,
+      itemCount: events.length,
       itemBuilder: (context, index) {
         return Card(
-          child: _tile(data[index], Icons.calendar_today)
+          child: _tile(events[index], Icons.calendar_today)
         );
       }
     );
   }
 
-  ListTile _tile(Event data, IconData icon) {
+  ListTile _tile(Event event, IconData icon) {
+    File _image;
+    final picker = ImagePicker();
+    Future _getImage(picker) async {
+      final pickedFile = await picker.getImage(source: ImageSource.camera);
+      setState(() {
+        _image = File(pickedFile.path);
+        print(pickedFile.path);
+      });
+    }
+
     return ListTile(
-      title: Text(data.title,
+      title: Text(event.title,
           style: TextStyle(
             fontWeight: FontWeight.w500,
             fontSize: 20,
           )),
-      subtitle: Text(data.startTime + ' ~ ' + data.endTime),
+      subtitle: Text(event.startTime + ' ~ ' + event.endTime),
       leading: Icon(
         icon,
         color: Colors.red[500],
@@ -48,12 +66,14 @@ class _eventListPageState extends State<eventListPage> {
       onTap: () {
 //        print('tap');
       },
-      trailing: Wrap(
+      trailing: (!widget.viewOnly) ? Wrap(
         spacing: 6,
         children: <Widget>[
           IconButton(
             icon: new Icon(Icons.photo_camera),
-            onPressed: () { /* Your code */ },
+            onPressed: () {
+              _getImage(picker);
+            },
           ),
           IconButton(
             icon: new Icon(Icons.delete),
@@ -62,12 +82,13 @@ class _eventListPageState extends State<eventListPage> {
                 context: context,
                 barrierDismissible: false,
                 builder: (context) => AlertDialog(
-                  content: _deleteEvent(data.userId, data.eventId),
+                  content: _deleteEvent(event.userId, event.eventId),
                   actions: <Widget>[
                     FlatButton(
                         child: Text("OK"),
                         onPressed: () {
-                          Navigator.pop(context);
+//                          Navigator.pop(context);
+                          Navigator.pushNamed(context, "/home", arguments: widget.user);
                         }
                     ),
                   ],
@@ -76,7 +97,7 @@ class _eventListPageState extends State<eventListPage> {
             },
           ),
         ],
-      ),
+      ) : null
     );
   }
 
@@ -93,4 +114,6 @@ class _eventListPageState extends State<eventListPage> {
       },
     );
   }
+
+
 }

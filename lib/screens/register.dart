@@ -4,12 +4,12 @@ import 'package:first_flutter_project/https/api.dart';
 import 'package:first_flutter_project/models/user.dart';
 
 
-class RegisterPage extends StatefulWidget {
+class registerPage extends StatefulWidget {
   @override
-  _RegisterPageState createState() => _RegisterPageState();
+  _registerPageState createState() => _registerPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _registerPageState extends State<registerPage> {
   final TextEditingController _controller_username = TextEditingController();
   final TextEditingController _controller_password = TextEditingController();
   final TextEditingController _controller_email = TextEditingController();

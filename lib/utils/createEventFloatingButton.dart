@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:first_flutter_project/https/api.dart';
 import 'package:first_flutter_project/utils/timeListTile.dart';
+import 'package:first_flutter_project/models/user.dart';
 
 
 class createEventFloatingButton extends StatefulWidget {
   const createEventFloatingButton({
     Key key,
-    @required this.userId,
+    @required this.user,
   }) : super(key: key);
 
-  final String userId;
+  final User user;
   @override
   _createEventFloatingButtonState createState() => _createEventFloatingButtonState();
 }
@@ -73,7 +74,7 @@ class _createEventFloatingButtonState extends State<createEventFloatingButton> {
                     barrierDismissible: false,
                     builder: (context) => AlertDialog(
                       content: _createEvent(
-                          widget.userId,
+                          widget.user.userId,
                           _controller_title.text,
                           _controller_startTime.text,
                           _controller_endTime.text,
@@ -82,8 +83,9 @@ class _createEventFloatingButtonState extends State<createEventFloatingButton> {
                         FlatButton(
                             child: Text("OK"),
                             onPressed: () {
-                              Navigator.pop(context);
-                              Navigator.pop(context);
+//                              Navigator.pop(context);
+//                              Navigator.pop(context);
+                              Navigator.pushNamed(context, "/home", arguments: widget.user);
                             }
                         ),
                       ],

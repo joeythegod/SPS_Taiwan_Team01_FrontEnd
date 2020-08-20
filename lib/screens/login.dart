@@ -4,12 +4,12 @@ import 'package:first_flutter_project/https/api.dart';
 import 'package:first_flutter_project/models/user.dart';
 
 
-class LoginPage extends StatefulWidget {
+class loginPage extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _loginPageState createState() => _loginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _loginPageState extends State<loginPage> {
 
   bool _isHidden = true;
   bool _loginSucceed = false;

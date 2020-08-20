@@ -3,6 +3,9 @@ import "package:first_flutter_project/utils/routes.dart";
 import "package:first_flutter_project/screens/login.dart";
 import "package:first_flutter_project/screens/home.dart";
 import "package:first_flutter_project/screens/register.dart";
+import "package:first_flutter_project/screens/share.dart";
+import "package:first_flutter_project/screens/friendList.dart";
+import "package:first_flutter_project/screens/friendEventPage.dart";
 
 
 void main() => runApp(myApp());
@@ -16,17 +19,19 @@ class myApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       routes: {
-        AppRoutes.login: (context) => LoginPage(),
-        AppRoutes.home: (context) => HomePage(),
-        AppRoutes.register: (context) => RegisterPage(),
-
+        AppRoutes.login: (context) => loginPage(),
+        AppRoutes.home: (context) => homePage(),
+        AppRoutes.register: (context) => registerPage(),
+        AppRoutes.share: (context) => sharePage(),
+        AppRoutes.friendList: (context) => friendListPage(),
+        AppRoutes.friendEvent: (context) => friendEventPage(),
       },
       onGenerateRoute: (setting) {
         switch (setting.name) {
           case AppRoutes.root:
-            return MaterialPageRoute(builder: (context) => LoginPage());
+            return MaterialPageRoute(builder: (context) => loginPage());
           default:
-            return MaterialPageRoute(builder: (context) => LoginPage());
+            return MaterialPageRoute(builder: (context) => loginPage());
         }
       },
     );

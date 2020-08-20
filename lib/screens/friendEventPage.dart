@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:first_flutter_project/models/user.dart';
+import 'package:first_flutter_project/models/friend.dart';
 import 'package:first_flutter_project/models/event.dart';
 import 'package:first_flutter_project/screens/eventTab.dart';
-import 'package:first_flutter_project/screens/drawer.dart';
-import 'package:first_flutter_project/utils/createEventFloatingButton.dart';
 import 'package:first_flutter_project/https/api.dart';
 
 
-class homePage extends StatefulWidget {
+class friendEventPage extends StatefulWidget {
   @override
-  _homePageState createState() => _homePageState();
+  _friendEventPageState createState() => _friendEventPageState();
 }
 
-class _homePageState extends State<homePage> {
+class _friendEventPageState extends State<friendEventPage> {
   @override
   Widget build(BuildContext context) {
-    User _user = ModalRoute.of(context).settings.arguments;
-    dynamic eventTab = _fetchEvent(_user);
+    final Map arguments = ModalRoute.of(context).settings.arguments as Map;
+    User _user = arguments["user"];
+    Friend _friend = arguments["friend"];
+    dynamic eventTab = _fetchEvent(_friend, _user);
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -25,7 +26,7 @@ class _homePageState extends State<homePage> {
           title: TabBar(
             labelPadding: EdgeInsets.zero,
             tabs: <Widget>[
-              Tab(text: "My Events"),
+              Tab(text: "Friend Events"),
               Tab(text: "Calendar View"),
             ],
           ),
@@ -34,7 +35,7 @@ class _homePageState extends State<homePage> {
               icon: Icon(Icons.refresh),
               onPressed: () {
                 setState(() {
-                  eventTab = _fetchEvent(_user);
+                  eventTab = _fetchEvent(_friend, _user);
                 });
               },
             )
@@ -46,19 +47,17 @@ class _homePageState extends State<homePage> {
             Text("Calendar to do"),
           ],
         ),
-        floatingActionButton: createEventFloatingButton(user: _user),
-        drawer: drawerPage(user: _user),
       ),
     );
   }
 
-  FutureBuilder _fetchEvent(User user) {
+  FutureBuilder _fetchEvent(Friend friend, User user) {
     return FutureBuilder<List<Event>>(
-      future: fetchEvent(user.userId),
+      future: fetchEvent(friend.userId),
       builder: (BuildContext context, AsyncSnapshot<List<Event>> snapshot) {
         if (snapshot.hasData) {
           List<Event> events = snapshot.data;
-          return eventTab(events: events, user: user, viewOnly: false,);
+          return eventTab(events: events, user: user, viewOnly: true,);
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
         }
