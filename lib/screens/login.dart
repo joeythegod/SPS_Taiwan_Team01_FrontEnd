@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_progress_hud/flutter_progress_hud.dart';
 import 'package:first_flutter_project/https/api.dart';
 import 'package:first_flutter_project/models/user.dart';
 
@@ -25,89 +24,90 @@ class _loginPageState extends State<loginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ProgressHUD(
-      backgroundColor: Colors.black87,
-      child: Builder(
-        builder: (context) => Scaffold(
-          appBar: AppBar(
-            title: Text("Login"),
-          ),
-          body: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                Container(
-                  padding:
-                    EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-                  child: TextFormField(
-                    controller: _controller_username,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person),
-                      labelText: "Name *",
-                      hintText: "Your username",
-                    ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Login"),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Container(
+              padding:
+              EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+              child: TextFormField(
+                controller: _controller_username,
+                decoration: const InputDecoration(
+                  prefixIcon: Icon(Icons.person),
+                  labelText: "Name *",
+                  hintText: "Your username",
+                ),
+              ),
+            ),
+            Container(
+              padding:
+              EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+              child: TextFormField(
+                obscureText: _isHidden,
+                controller: _controller_password,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.lock),
+                  suffixIcon: IconButton(
+                      onPressed: _toggleVisibility,
+                      icon: _isHidden ? Icon(Icons.visibility_off) : Icon(
+                          Icons.visibility)
                   ),
+                  labelText: "Password *",
+                  hintText: "Your password",
                 ),
-                Container(
-                  padding:
-                  EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-                  child: TextFormField(
-                    obscureText: _isHidden,
-                    controller: _controller_password,
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.lock),
-                      suffixIcon: IconButton(
-                        onPressed: _toggleVisibility,
-                        icon: _isHidden ? Icon(Icons.visibility_off) : Icon(Icons.visibility)
-                      ),
-                      labelText: "Password *",
-                      hintText: "Your password",
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 52.0,
-                ),
-                RaisedButton(
-                  child: Text('Login'),
-                  onPressed: () async {
-                    await showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (context) => AlertDialog(
+              ),
+            ),
+            SizedBox(
+              height: 52.0,
+            ),
+            RaisedButton(
+              child: Text('Login'),
+              onPressed: () async {
+                await showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) =>
+                      AlertDialog(
                         content: _login(),
                         actions: <Widget>[
                           FlatButton(
-                            child: Text("OK"),
-                            onPressed: () {
-                              if (_loginSucceed) {
-                                Navigator.pushNamed(context, "/home", arguments: _user);
+                              child: Text("OK"),
+                              onPressed: () {
+                                if (_loginSucceed) {
+                                  Navigator.pushNamed(
+                                      context, "/home", arguments: _user);
+                                }
+                                else {
+                                  Navigator.pop(context);
+                                }
                               }
-                              else {
-                                Navigator.pop(context);
-                              }
-                            }
                           ),
                         ],
                       ),
-                    );
-                  },
-                ),
-                SizedBox(
-                  height: 52.0,
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width - 48.0,
-                  height: 48.0,
-                  child: RaisedButton(
-                    child: Text("Register Now!"),
-                    onPressed: () {
-                      Navigator.pushReplacementNamed(context, "/register");
-                    },
-                  ),
-                ),
-              ],
+                );
+              },
             ),
-          ),
+            SizedBox(
+              height: 52.0,
+            ),
+            SizedBox(
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width - 48.0,
+              height: 48.0,
+              child: RaisedButton(
+                child: Text("Register Now!"),
+                onPressed: () {
+                  Navigator.pushNamed(context, "/register");
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );

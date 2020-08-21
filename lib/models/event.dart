@@ -5,8 +5,9 @@ class Event {
   final String endTime;
   final String content;
   final String eventId;
+  final String imgUrl;
 
-  Event({this.userId, this.title, this.startTime, this.endTime, this.content, this.eventId});
+  Event({this.userId, this.title, this.startTime, this.endTime, this.content, this.eventId, this.imgUrl});
 
   factory Event.fromJson(Map<String, dynamic> json) {
     return Event(
@@ -16,6 +17,7 @@ class Event {
       endTime: json['endTime'].substring(0, 16),
       content: json['content'],
       eventId: json['eventId'],
+      imgUrl: json['imgUrl'],
     );
   }
 }

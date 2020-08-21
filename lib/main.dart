@@ -5,7 +5,8 @@ import "package:first_flutter_project/screens/home.dart";
 import "package:first_flutter_project/screens/register.dart";
 import "package:first_flutter_project/screens/share.dart";
 import "package:first_flutter_project/screens/friendList.dart";
-import "package:first_flutter_project/screens/friendEventPage.dart";
+import "package:first_flutter_project/screens/friendEvent.dart";
+import "package:first_flutter_project/screens/eventInfo.dart";
 
 
 void main() => runApp(myApp());
@@ -25,6 +26,8 @@ class myApp extends StatelessWidget {
         AppRoutes.share: (context) => sharePage(),
         AppRoutes.friendList: (context) => friendListPage(),
         AppRoutes.friendEvent: (context) => friendEventPage(),
+        AppRoutes.eventInfo: (context) => eventInfoPage(),
+
       },
       onGenerateRoute: (setting) {
         switch (setting.name) {

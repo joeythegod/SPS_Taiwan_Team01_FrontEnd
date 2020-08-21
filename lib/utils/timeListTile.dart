@@ -19,18 +19,18 @@ class _timeListTileState extends State<timeListTile> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(Icons.timer),
-      title: Text('${widget.title}'),
-      subtitle: Text('${widget.controller_time.text}'),
+      leading: Text('${widget.title}'),
+      title: Text('${widget.controller_time.text}'),
+//      subtitle: ,
       onTap: () {
         DatePicker.showDateTimePicker(
           context,
           showTitleActions: true,
           minTime: DateTime(2018, 1, 1, 0, 0),
           maxTime: DateTime(2025, 12, 31, 23, 59),
-          onChanged: (date) {
-            print('change $date in time zone ');
-          },
+//          onChanged: (date) {
+//            print('change $date in time zone ');
+//          },
           onConfirm: (date) {
             print('confirm $date');
             setState(() {

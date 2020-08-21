@@ -4,7 +4,6 @@ import 'package:first_flutter_project/https/api.dart';
 import 'package:first_flutter_project/utils/timeListTile.dart';
 import 'package:first_flutter_project/models/user.dart';
 
-
 class createEventFloatingButton extends StatefulWidget {
   const createEventFloatingButton({
     Key key,
@@ -12,8 +11,10 @@ class createEventFloatingButton extends StatefulWidget {
   }) : super(key: key);
 
   final User user;
+
   @override
-  _createEventFloatingButtonState createState() => _createEventFloatingButtonState();
+  _createEventFloatingButtonState createState() =>
+      _createEventFloatingButtonState();
 }
 
 class _createEventFloatingButtonState extends State<createEventFloatingButton> {
@@ -22,11 +23,16 @@ class _createEventFloatingButtonState extends State<createEventFloatingButton> {
     return FloatingActionButton(
       onPressed: () async {
         final TextEditingController _controller_title = TextEditingController();
-        final TextEditingController _controller_startTime = TextEditingController();
-        final TextEditingController _controller_endTime = TextEditingController();
-        final TextEditingController _controller_content = TextEditingController();
-        _controller_startTime.text = '${DateFormat('yyyy-MM-dd kk:mm').format(DateTime.now())}';
-        _controller_endTime.text = '${DateFormat('yyyy-MM-dd kk:mm').format(DateTime.now())}';
+        final TextEditingController _controller_startTime =
+            TextEditingController();
+        final TextEditingController _controller_endTime =
+            TextEditingController();
+        final TextEditingController _controller_content =
+            TextEditingController();
+        _controller_startTime.text =
+            '${DateFormat('yyyy-MM-dd kk:mm').format(DateTime.now())}';
+        _controller_endTime.text =
+            '${DateFormat('yyyy-MM-dd kk:mm').format(DateTime.now())}';
 
         await showDialog(
           context: context,
@@ -35,26 +41,19 @@ class _createEventFloatingButtonState extends State<createEventFloatingButton> {
             title: Text('Create Event'),
             children: <Widget>[
               ListTile(
-                leading: Icon(Icons.text_fields),
+                leading: Text('Title'),
                 title: TextFormField(
                   controller: _controller_title,
-                  decoration: const InputDecoration(
-                    labelText: "Title *",
-                    hintText: "Your title",
-                  ),
                 ),
               ),
-              timeListTile(title: 'startTime', controller_time: _controller_startTime),
-              timeListTile(title: 'endTime', controller_time: _controller_endTime),
+              timeListTile(
+                  title: 'Start', controller_time: _controller_startTime),
+              timeListTile(title: 'End', controller_time: _controller_endTime),
               ListTile(
-                leading: Icon(Icons.text_format),
+                leading: Text('Notes'),
                 title: TextFormField(
                   controller: _controller_content,
-                  decoration: const InputDecoration(
-                    labelText: "Content *",
-                    hintText: "Your content",
-                  ),
-                  maxLines: 1,
+                  maxLines: 4,
                 ),
                 onTap: () {},
               ),
@@ -83,11 +82,9 @@ class _createEventFloatingButtonState extends State<createEventFloatingButton> {
                         FlatButton(
                             child: Text("OK"),
                             onPressed: () {
-//                              Navigator.pop(context);
-//                              Navigator.pop(context);
-                              Navigator.pushNamed(context, "/home", arguments: widget.user);
-                            }
-                        ),
+                              Navigator.pushNamed(context, "/home",
+                                  arguments: widget.user);
+                            }),
                       ],
                     ),
                   );
@@ -101,10 +98,11 @@ class _createEventFloatingButtonState extends State<createEventFloatingButton> {
       backgroundColor: Colors.green,
     );
   }
-  FutureBuilder _createEvent(String userId, String title, String startTime, String endTime, String content) {
+
+  FutureBuilder _createEvent(String userId, String title, String startTime,
+      String endTime, String content) {
     return FutureBuilder<String>(
-      future: createEvent(userId, title, startTime,
-          endTime, content),
+      future: createEvent(userId, title, startTime, endTime, content),
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
         if (snapshot.hasData) {
           return Text('Created successfully!');

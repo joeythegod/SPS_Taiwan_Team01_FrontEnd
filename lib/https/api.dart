@@ -57,7 +57,8 @@ Future<List<Event>> fetchEvent(String userId) async {
       .get("https://tfang-sps-summer20.appspot.com/event?userId=${userId}");
   if (response.statusCode >= 200 && response.statusCode <= 210) {
     List data = jsonDecode(response.body);
-    return data.map((event) => new Event.fromJson(event)).toList();
+    List<Event> events = data.map((event) => new Event.fromJson(event)).toList();
+    return events;
   } else if (response.statusCode >= 500) {
     throw Exception('Server error');
   } else {

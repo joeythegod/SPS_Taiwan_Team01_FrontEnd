@@ -18,6 +18,7 @@ class eventTab extends StatefulWidget {
   final User user;
   final bool viewOnly;
   final Friend friend;
+
   @override
   _eventTabState createState() => _eventTabState();
 }
@@ -25,19 +26,49 @@ class eventTab extends StatefulWidget {
 class _eventTabState extends State<eventTab> {
   @override
   Widget build(BuildContext context) {
+    widget.events.sort((a, b) => a.startTime.compareTo(b.endTime));
+//    for(var event in events){
+//      if
+//    }
     return Container(
       child: _event(widget.events),
     );
   }
 
   ListView _event(events) {
+    List colorList = [
+      Colors.purple.shade200,
+      Colors.blue.shade200,
+      Colors.green.shade200,
+      Colors.red.shade200,
+      Colors.yellow.shade200,
+    ];
     return ListView.builder(
       itemCount: events.length,
       itemBuilder: (context, index) {
         return Card(
-          child: _tile(events[index], Icons.calendar_today)
+          child: Column(
+            children: <Widget>[
+              Container(
+                color: colorList[index % colorList.length],
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(
+                      events[index].startTime.substring(5, 10),
+                      style: TextStyle(color: Colors.black.withOpacity(0.6)),
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                child: _tile(events[index], Icons.calendar_today),
+              ),
+            ],
+          ),
         );
-      }
+      },
     );
   }
 
@@ -48,57 +79,56 @@ class _eventTabState extends State<eventTab> {
       final pickedFile = await picker.getImage(source: ImageSource.camera);
       setState(() {
         _image = File(pickedFile.path);
-        print(pickedFile.path);
       });
     }
 
     return ListTile(
-      title: Text(event.title,
+        title: Text(
+          event.title,
           style: TextStyle(
             fontWeight: FontWeight.w500,
             fontSize: 20,
-          )),
-      subtitle: Text(event.startTime + ' ~ ' + event.endTime),
-      leading: Icon(
-        icon,
-        color: Colors.red[500],
-      ),
-      onTap: () {
-//        print('tap');
-      },
-      trailing: (!widget.viewOnly) ? Wrap(
-        spacing: 6,
-        children: <Widget>[
-          IconButton(
-            icon: new Icon(Icons.photo_camera),
-            onPressed: () {
-              _getImage(picker);
-            },
           ),
-          IconButton(
-            icon: new Icon(Icons.delete),
-            onPressed: ()  async {
-              await showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (context) => AlertDialog(
-                  content: _deleteEvent(event.userId, event.eventId),
-                  actions: <Widget>[
-                    FlatButton(
-                        child: Text("OK"),
-                        onPressed: () {
-//                          Navigator.pop(context);
-                          Navigator.pushNamed(context, "/home", arguments: widget.user);
-                        }
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-        ],
-      ) : null
-    );
+        ),
+        leading: Text(event.startTime.substring(10, 16) +
+            '\n' +
+            event.endTime.substring(10, 16)),
+        onTap: () =>
+            Navigator.pushNamed(context, "/eventInfo", arguments: event),
+        trailing: (!widget.viewOnly)
+            ? Wrap(
+          spacing: 6,
+          children: <Widget>[
+            IconButton(
+              icon: new Icon(Icons.photo_camera),
+              onPressed: () {
+                _getImage(picker);
+              },
+            ),
+            IconButton(
+              icon: new Icon(Icons.delete),
+              onPressed: () async {
+                await showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) =>
+                      AlertDialog(
+                        content: _deleteEvent(event.userId, event.eventId),
+                        actions: <Widget>[
+                          FlatButton(
+                              child: Text("OK"),
+                              onPressed: () {
+                                Navigator.pushNamed(context, "/home",
+                                    arguments: widget.user);
+                              }),
+                        ],
+                      ),
+                );
+              },
+            ),
+          ],
+        )
+            : null);
   }
 
   FutureBuilder _deleteEvent(String userId, String eventId) {
@@ -106,7 +136,8 @@ class _eventTabState extends State<eventTab> {
       future: deleteEvent(userId, eventId),
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
         if (snapshot.hasData) {
-          return Text('Deleted successfully!');;
+          return Text('Deleted successfully!');
+          ;
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
         }
@@ -114,6 +145,4 @@ class _eventTabState extends State<eventTab> {
       },
     );
   }
-
-
 }

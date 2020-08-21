@@ -6,4 +6,5 @@ class AppRoutes {
   static const share = "/share";
   static const friendList = "/friendList";
   static const friendEvent = "/friendEvent";
+  static const eventInfo = "/eventInfo";
 }
