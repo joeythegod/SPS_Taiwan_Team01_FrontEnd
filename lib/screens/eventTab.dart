@@ -78,7 +78,9 @@ class _eventTabState extends State<eventTab> {
     Future _getImage(picker) async {
       final pickedFile = await picker.getImage(source: ImageSource.camera);
       setState(() {
-        _image = File(pickedFile.path);
+        if (pickedFile != null) {
+          _image = File(pickedFile.path);
+        }
       });
     }
 
@@ -97,38 +99,80 @@ class _eventTabState extends State<eventTab> {
             Navigator.pushNamed(context, "/eventInfo", arguments: event),
         trailing: (!widget.viewOnly)
             ? Wrap(
-          spacing: 6,
-          children: <Widget>[
-            IconButton(
-              icon: new Icon(Icons.photo_camera),
-              onPressed: () {
-                _getImage(picker);
-              },
-            ),
-            IconButton(
-              icon: new Icon(Icons.delete),
-              onPressed: () async {
-                await showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (context) =>
-                      AlertDialog(
-                        content: _deleteEvent(event.userId, event.eventId),
-                        actions: <Widget>[
-                          FlatButton(
-                              child: Text("OK"),
-                              onPressed: () {
-                                Navigator.pushNamed(context, "/home",
-                                    arguments: widget.user);
-                              }),
-                        ],
-                      ),
-                );
-              },
-            ),
-          ],
-        )
+                spacing: 6,
+                children: <Widget>[
+                  (event.imgUrl != null)
+                      ? IconButton(
+                          icon: new Icon(Icons.check_box_outline_blank),
+                        )
+                      : IconButton(
+                          icon: new Icon(Icons.check_box),
+                        ),
+                  IconButton(
+                      icon: new Icon(Icons.photo_camera),
+                      onPressed: () async {
+                        await _getImage(picker);
+                        if (_image != null) {
+                          print('image select!');
+                          String blobstoreUrl = await getBlobstoreUrl();
+                          await showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (context) => AlertDialog(
+                              content: _uploadImage(
+                                  blobstoreUrl, event.eventId, _image.path),
+                              actions: <Widget>[
+                                FlatButton(
+                                    child: Text("OK"),
+                                    onPressed: () {
+                                      Navigator.pushNamed(context, "/home",
+                                          arguments: widget.user);
+                                    }),
+                              ],
+                            ),
+                          );
+                        } else {
+                          print('no image select!');
+                        }
+                      }),
+                  IconButton(
+                    icon: new Icon(Icons.delete),
+                    onPressed: () async {
+                      await showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (context) => AlertDialog(
+                          content: _deleteEvent(event.userId, event.eventId),
+                          actions: <Widget>[
+                            FlatButton(
+                                child: Text("OK"),
+                                onPressed: () {
+                                  Navigator.pushNamed(context, "/home",
+                                      arguments: widget.user);
+                                }),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              )
             : null);
+  }
+
+  FutureBuilder _uploadImage(
+      String blobstoreUrl, String eventId, String filePath) {
+    return FutureBuilder<String>(
+      future: uploadImage(blobstoreUrl, eventId, filePath),
+      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+        if (snapshot.hasData) {
+          return Text('Upload successfully!');
+        } else if (snapshot.hasError) {
+          return Text("${snapshot.error}");
+        }
+        return CircularProgressIndicator();
+      },
+    );
   }
 
   FutureBuilder _deleteEvent(String userId, String eventId) {
@@ -137,7 +181,6 @@ class _eventTabState extends State<eventTab> {
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
         if (snapshot.hasData) {
           return Text('Deleted successfully!');
-          ;
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
         }

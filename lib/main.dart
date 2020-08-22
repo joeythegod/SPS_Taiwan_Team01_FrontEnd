@@ -27,7 +27,6 @@ class myApp extends StatelessWidget {
         AppRoutes.friendList: (context) => friendListPage(),
         AppRoutes.friendEvent: (context) => friendEventPage(),
         AppRoutes.eventInfo: (context) => eventInfoPage(),
-
       },
       onGenerateRoute: (setting) {
         switch (setting.name) {

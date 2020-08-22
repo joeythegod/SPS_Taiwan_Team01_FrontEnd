@@ -17,7 +17,7 @@ class _eventInfoPageState extends State<eventInfoPage> {
     _markdownData += "# Time:\n#### _from_ _${_event.startTime}_\n\n";
     _markdownData += "#### _to_ _${_event.endTime}_\n";
     _markdownData += "# Note:\n${_event.content}\n";
-    String imgUrl = "http://lh3.googleusercontent.com/sU0QZebG67gRFBKETSKNV3uPm9f7JQSD_yW_0jzmFfw-3Hp_RnG3GPlC0noaY0DJMiorn9bpCpXlmvfaLo8aiVjJ3l0Ljs56l9E";
+    String imgUrl = "${_event.imgUrl}";
     _markdownData += "# Image:\n![image](${imgUrl})\n";
 
 

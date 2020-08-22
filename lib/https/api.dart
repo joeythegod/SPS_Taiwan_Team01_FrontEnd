@@ -1,9 +1,11 @@
-import 'dart:async';
+import 'dart:core';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:first_flutter_project/models/event.dart';
 import 'package:first_flutter_project/models/user.dart';
 import 'package:first_flutter_project/models/friend.dart';
+import 'dart:io';
+import 'package:dio/dio.dart';
 
 
 // User login
@@ -57,7 +59,8 @@ Future<List<Event>> fetchEvent(String userId) async {
       .get("https://tfang-sps-summer20.appspot.com/event?userId=${userId}");
   if (response.statusCode >= 200 && response.statusCode <= 210) {
     List data = jsonDecode(response.body);
-    List<Event> events = data.map((event) => new Event.fromJson(event)).toList();
+    List<Event> events =
+        data.map((event) => new Event.fromJson(event)).toList();
     return events;
   } else if (response.statusCode >= 500) {
     throw Exception('Server error');
@@ -106,10 +109,42 @@ Future<String> deleteEvent(String userId, String eventId) async {
   }
 }
 
+// Get blobstore url
+Future<String> getBlobstoreUrl() async {
+  final http.Response response = await http
+      .get("https://tfang-sps-summer20.appspot.com/blobstore-upload-url");
+  if (response.statusCode >= 200 && response.statusCode <= 210) {
+    String data = response.body;
+    return data.substring(1,data.length-2);
+  } else if (response.statusCode >= 500) {
+    throw Exception('Server error');
+  } else {
+    throw Exception('Failed to load');
+  }
+}
+
+// Upload Image
+Future<String> uploadImage(
+    String blobstoreUrl, String eventId, String filePath) async {
+  FormData formData = FormData.fromMap({
+    "eventId": eventId,
+    "imgUrl": await MultipartFile.fromFile(filePath, filename: "upload1.jpg"),
+  });
+  var response = await Dio().post(blobstoreUrl, data: formData);
+  print(response);
+  if (response.statusCode >= 200 && response.statusCode <= 210) {
+    return "ok";
+  } else if (response.statusCode >= 500) {
+    throw Exception('Server error');
+  } else {
+    throw Exception('Failed to load');
+  }
+}
+
 // Fetch all friends
 Future<List<Friend>> fetchFriend(String userId) async {
-  final http.Response response = await http.get(
-      "https://5f212e69daa42f00166656c2.mockapi.io/api/v1/username");
+  final http.Response response = await http
+      .get("https://5f212e69daa42f00166656c2.mockapi.io/api/v1/username");
   if (response.statusCode >= 200 && response.statusCode <= 210) {
     List data = jsonDecode(response.body);
     return data.map((friend) => new Friend.fromJson(friend)).toList();
