@@ -101,7 +101,7 @@ class _eventTabState extends State<eventTab> {
             ? Wrap(
                 spacing: 6,
                 children: <Widget>[
-                  (event.imgUrl != null)
+                  (event.imgUrl == null)
                       ? IconButton(
                           icon: new Icon(Icons.check_box_outline_blank),
                         )
