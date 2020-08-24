@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:first_flutter_project/models/user.dart';
 import 'package:first_flutter_project/screens/drawer.dart';
+import 'package:first_flutter_project/https/api.dart';
 
 class sharePage extends StatefulWidget {
   @override
@@ -34,7 +35,7 @@ class _sharePageState extends State<sharePage> {
                   context: context,
                   barrierDismissible: false,
                   builder: (context) => AlertDialog(
-                    content: _shareToFriend(_user.userId, _controller_friendUsername.text),
+                    content: _addFriend(_user.userId, _controller_friendUsername.text),
                     actions: <Widget>[
                       FlatButton(
                           child: Text("OK"),
@@ -56,13 +57,9 @@ class _sharePageState extends State<sharePage> {
   }
 
   // to do
-  FutureBuilder _shareToFriend(String userId, String friendUsername) {
-    final myFuture = Future(() {
-      return "joey";
-    });
+  FutureBuilder _addFriend(String userId, String friendUsername) {
     return FutureBuilder<String>(
-//      future: shareToFriend(userId, friendUsername),
-      future: myFuture,
+      future: addFriend(userId, friendUsername),
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
         if (snapshot.hasData) {
           return Text('Share to ${friendUsername} successfully!');

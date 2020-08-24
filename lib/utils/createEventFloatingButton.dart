@@ -53,7 +53,7 @@ class _createEventFloatingButtonState extends State<createEventFloatingButton> {
                 leading: Text('Notes'),
                 title: TextFormField(
                   controller: _controller_content,
-                  maxLines: 4,
+                  maxLines: 3,
                 ),
                 onTap: () {},
               ),

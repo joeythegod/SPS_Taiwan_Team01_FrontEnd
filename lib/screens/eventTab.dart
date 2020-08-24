@@ -89,9 +89,10 @@ class _eventTabState extends State<eventTab> {
           event.title,
           style: TextStyle(
             fontWeight: FontWeight.w500,
-            fontSize: 20,
+            fontSize: 16,
           ),
         ),
+        subtitle: event.content.length == 0 ? Text("(no note)") : Text(event.content),
         leading: Text(event.startTime.substring(10, 16) +
             '\n' +
             event.endTime.substring(10, 16)),
@@ -99,16 +100,17 @@ class _eventTabState extends State<eventTab> {
             Navigator.pushNamed(context, "/eventInfo", arguments: event),
         trailing: (!widget.viewOnly)
             ? Wrap(
-                spacing: 6,
+                spacing: 1,
                 children: <Widget>[
-                  (event.imgUrl == null)
-                      ? IconButton(
-                          icon: new Icon(Icons.check_box_outline_blank),
-                        )
-                      : IconButton(
-                          icon: new Icon(Icons.check_box),
-                        ),
+//                  (event.imgUrl == null)
+//                      ? IconButton(
+//                          icon: new Icon(Icons.check_box_outline_blank),
+//                        )
+//                      : IconButton(
+//                          icon: new Icon(Icons.check_box),
+//                        ),
                   IconButton(
+                      iconSize: 18.0,
                       icon: new Icon(Icons.photo_camera),
                       onPressed: () async {
                         await _getImage(picker);
@@ -135,7 +137,9 @@ class _eventTabState extends State<eventTab> {
                           print('no image select!');
                         }
                       }),
+
                   IconButton(
+                    iconSize: 18.0,
                     icon: new Icon(Icons.delete),
                     onPressed: () async {
                       await showDialog(

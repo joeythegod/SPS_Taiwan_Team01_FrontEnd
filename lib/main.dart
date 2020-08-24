@@ -17,7 +17,7 @@ class myApp extends StatelessWidget {
     return MaterialApp(
       title: "SPS Team 1",
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.blueGrey,
       ),
       routes: {
         AppRoutes.login: (context) => loginPage(),

@@ -15,7 +15,7 @@ class _loginPageState extends State<loginPage> {
   final TextEditingController _controller_username = TextEditingController();
   final TextEditingController _controller_password = TextEditingController();
   TextStyle buttonStyle = TextStyle(color: Colors.black54, fontSize: 18);
-  TextStyle linkStyle = TextStyle(color: Colors.blue, decoration: TextDecoration.underline, fontSize: 30);
+  TextStyle linkStyle = TextStyle(color: Colors.grey, decoration: TextDecoration.underline, fontSize: 30);
 
   void _toggleVisibility() {
     setState(() {
@@ -26,26 +26,30 @@ class _loginPageState extends State<loginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Login"),
-      ),
+//      appBar: AppBar(
+//        title: Text("Login"),
+//      ),
+      resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             SizedBox(
-              height: 26.0,
+              height: 104.0,
             ),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 48.0, vertical: 16.0),
-              child: Image(
-                image:
-                    NetworkImage('https://blog.hubspot.com/hubfs/image8-2.jpg#100x100'),
+              child: CircleAvatar(
+                radius: 30.0,
+                backgroundImage:
+                NetworkImage('https://blog.hubspot.com/hubfs/image8-2.jpg#50x50'),
+                backgroundColor: Colors.transparent,
               ),
             ),
             SizedBox(
-              height: 26.0,
+              height: 52.0,
             ),
             Container(
+              height: 64.0,
               padding: EdgeInsets.symmetric(horizontal: 48.0, vertical: 8.0),
               child: TextFormField(
                 controller: _controller_username,
@@ -68,6 +72,7 @@ class _loginPageState extends State<loginPage> {
               ),
             ),
             Container(
+              height: 64.0,
               padding: EdgeInsets.symmetric(horizontal: 48.0, vertical: 8.0),
               child: TextFormField(
                 obscureText: _isHidden,
@@ -96,16 +101,17 @@ class _loginPageState extends State<loginPage> {
               ),
             ),
             SizedBox(
-              height: 16.0,
+              height: 52.0,
             ),
             SizedBox(
               width: MediaQuery.of(context).size.width - 100.0,
               height: 48.0,
-              child: RaisedButton(
+              child: FlatButton(
                 child: Text('Login', style: buttonStyle,),
+                color: Colors.white.withOpacity(0.05),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18.0),
-                    side: BorderSide(color: Colors.white)),
+                    side: BorderSide(color: Colors.black)),
                 onPressed: () async {
                   await showDialog(
                     context: context,
@@ -130,7 +136,7 @@ class _loginPageState extends State<loginPage> {
               ),
             ),
             SizedBox(
-              height: 150.0,
+              height: 80.0,
             ),
             RichText(
               text: TextSpan(

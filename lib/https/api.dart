@@ -4,9 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:first_flutter_project/models/event.dart';
 import 'package:first_flutter_project/models/user.dart';
 import 'package:first_flutter_project/models/friend.dart';
-import 'dart:io';
 import 'package:dio/dio.dart';
-
 
 // User login
 Future<User> login(String username, String password) async {
@@ -115,7 +113,7 @@ Future<String> getBlobstoreUrl() async {
       .get("https://tfang-sps-summer20.appspot.com/blobstore-upload-url");
   if (response.statusCode >= 200 && response.statusCode <= 210) {
     String data = response.body;
-    return data.substring(1,data.length-2);
+    return data.substring(1, data.length - 2);
   } else if (response.statusCode >= 500) {
     throw Exception('Server error');
   } else {
@@ -141,13 +139,40 @@ Future<String> uploadImage(
   }
 }
 
+// share to friend
+Future<String> addFriend(String userId, String friendUsername) async {
+  final http.Response response = await http.get(
+      "https://jlee-sps-summer20.df.r.appspot.com/add?userId=${userId}&friendUsername=${friendUsername}");
+  if (response.statusCode >= 200 && response.statusCode <= 210) {
+    return "ok";
+  } else if (response.statusCode == 400) {
+    throw Exception(
+        'Bad request: Username is null or repeat or the user wants to add itself');
+  } else if (response.statusCode == 404) {
+    throw Exception('Username (userB) not found in database');
+  } else if (response.statusCode >= 500) {
+    throw Exception('Server error');
+  } else {
+    throw Exception('Failed to load');
+  }
+}
+
 // Fetch all friends
 Future<List<Friend>> fetchFriend(String userId) async {
   final http.Response response = await http
-      .get("https://5f212e69daa42f00166656c2.mockapi.io/api/v1/username");
+      .get("https://jlee-sps-summer20.df.r.appspot.com/query?userId=${userId}");
   if (response.statusCode >= 200 && response.statusCode <= 210) {
-    List data = jsonDecode(response.body);
-    return data.map((friend) => new Friend.fromJson(friend)).toList();
+    List accessList = jsonDecode(response.body)["accessListEntity"];
+    List usernameList = jsonDecode(response.body)["usernameList"];
+    List<Friend> friends = [];
+    if (accessList.length != null) {
+      for (int i = 0; i < accessList.length; i++) {
+        friends.add(Friend(userId: accessList[i], username: usernameList[i]));
+      }
+    }
+//    List data = jsonDecode(response.body);
+//    List<Friend> friends = data.map((friend) => new Friend.fromJson(friend)).toList();
+    return friends;
   } else if (response.statusCode >= 500) {
     throw Exception('Server error');
   } else {
