@@ -27,9 +27,6 @@ class _eventTabState extends State<eventTab> {
   @override
   Widget build(BuildContext context) {
     widget.events.sort((a, b) => a.startTime.compareTo(b.endTime));
-//    for(var event in events){
-//      if
-//    }
     return Container(
       child: _event(widget.events),
     );
@@ -46,7 +43,12 @@ class _eventTabState extends State<eventTab> {
     return ListView.builder(
       itemCount: events.length,
       itemBuilder: (context, index) {
-        return Card(
+        return Container(
+          decoration: BoxDecoration(
+            border: Border.all(width: 0.8),
+            borderRadius: BorderRadius.circular(4.0),
+          ),
+          margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
           child: Column(
             children: <Widget>[
               Container(
@@ -62,9 +64,7 @@ class _eventTabState extends State<eventTab> {
                   ),
                 ),
               ),
-              Container(
-                child: _tile(events[index], Icons.calendar_today),
-              ),
+              _tile(events[index], Icons.calendar_today),
             ],
           ),
         );
@@ -92,7 +92,8 @@ class _eventTabState extends State<eventTab> {
             fontSize: 16,
           ),
         ),
-        subtitle: event.content.length == 0 ? Text("(no note)") : Text(event.content),
+        subtitle:
+            event.content.length == 0 ? Text("(no note)") : Text(event.content),
         leading: Text(event.startTime.substring(10, 16) +
             '\n' +
             event.endTime.substring(10, 16)),
@@ -102,13 +103,6 @@ class _eventTabState extends State<eventTab> {
             ? Wrap(
                 spacing: 1,
                 children: <Widget>[
-//                  (event.imgUrl == null)
-//                      ? IconButton(
-//                          icon: new Icon(Icons.check_box_outline_blank),
-//                        )
-//                      : IconButton(
-//                          icon: new Icon(Icons.check_box),
-//                        ),
                   IconButton(
                       iconSize: 18.0,
                       icon: new Icon(Icons.photo_camera),
@@ -137,7 +131,6 @@ class _eventTabState extends State<eventTab> {
                           print('no image select!');
                         }
                       }),
-
                   IconButton(
                     iconSize: 18.0,
                     icon: new Icon(Icons.delete),

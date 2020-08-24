@@ -5,7 +5,7 @@ import 'package:first_flutter_project/screens/eventTab.dart';
 import 'package:first_flutter_project/screens/drawer.dart';
 import 'package:first_flutter_project/utils/createEventFloatingButton.dart';
 import 'package:first_flutter_project/https/api.dart';
-
+import 'package:first_flutter_project/screens/calendarView.dart';
 
 class homePage extends StatefulWidget {
   @override
@@ -16,7 +16,8 @@ class _homePageState extends State<homePage> {
   @override
   Widget build(BuildContext context) {
     User _user = ModalRoute.of(context).settings.arguments;
-    dynamic eventTab = _fetchEvent(_user);
+    dynamic eventTab = _fetchEventTab1(_user);
+    dynamic calendarViewTab = _fetchEventTab2(_user);
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -34,7 +35,8 @@ class _homePageState extends State<homePage> {
               icon: Icon(Icons.refresh),
               onPressed: () {
                 setState(() {
-                  eventTab = _fetchEvent(_user);
+                  eventTab = _fetchEventTab1(_user);
+                  calendarViewTab = _fetchEventTab2(_user);
                 });
               },
             )
@@ -43,7 +45,7 @@ class _homePageState extends State<homePage> {
         body: TabBarView(
           children: <Widget>[
             eventTab,
-            Text("Calendar to do"),
+            calendarViewTab,
           ],
         ),
         floatingActionButton: createEventFloatingButton(user: _user),
@@ -52,13 +54,27 @@ class _homePageState extends State<homePage> {
     );
   }
 
-  FutureBuilder _fetchEvent(User user) {
+  FutureBuilder _fetchEventTab1(User user) {
+      return FutureBuilder<List<Event>>(
+        future: fetchEvent(user.userId),
+        builder: (BuildContext context, AsyncSnapshot<List<Event>> snapshot) {
+          if (snapshot.hasData) {
+            List<Event> events = snapshot.data;
+            return eventTab(events: events, user: user, viewOnly: false,);
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          }
+          return CircularProgressIndicator();
+        },
+      );
+  }
+  FutureBuilder _fetchEventTab2(User user) {
     return FutureBuilder<List<Event>>(
       future: fetchEvent(user.userId),
       builder: (BuildContext context, AsyncSnapshot<List<Event>> snapshot) {
         if (snapshot.hasData) {
           List<Event> events = snapshot.data;
-          return eventTab(events: events, user: user, viewOnly: false,);
+          return calendarViewTab(events: events, user: user, viewOnly: false,);
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
         }

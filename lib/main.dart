@@ -7,9 +7,11 @@ import "package:first_flutter_project/screens/share.dart";
 import "package:first_flutter_project/screens/friendList.dart";
 import "package:first_flutter_project/screens/friendEvent.dart";
 import "package:first_flutter_project/screens/eventInfo.dart";
+import 'package:intl/date_symbol_data_local.dart';
 
-
-void main() => runApp(myApp());
+void main() {
+  initializeDateFormatting().then((_) => runApp(myApp()));
+}
 
 class myApp extends StatelessWidget {
   @override

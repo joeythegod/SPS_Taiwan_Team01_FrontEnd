@@ -162,16 +162,8 @@ Future<List<Friend>> fetchFriend(String userId) async {
   final http.Response response = await http
       .get("https://jlee-sps-summer20.df.r.appspot.com/query?userId=${userId}");
   if (response.statusCode >= 200 && response.statusCode <= 210) {
-    List accessList = jsonDecode(response.body)["accessListEntity"];
-    List usernameList = jsonDecode(response.body)["usernameList"];
-    List<Friend> friends = [];
-    if (accessList.length != null) {
-      for (int i = 0; i < accessList.length; i++) {
-        friends.add(Friend(userId: accessList[i], username: usernameList[i]));
-      }
-    }
-//    List data = jsonDecode(response.body);
-//    List<Friend> friends = data.map((friend) => new Friend.fromJson(friend)).toList();
+    List data = jsonDecode(response.body);
+    List<Friend> friends = data.map((friend) => new Friend.fromJson(friend)).toList();
     return friends;
   } else if (response.statusCode >= 500) {
     throw Exception('Server error');

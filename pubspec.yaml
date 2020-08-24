@@ -31,6 +31,8 @@ dependencies:
   image_picker: ^0.6.7+4
   flutter_markdown:
   dio:
+  table_calendar: ^2.2.3
+
 
 
 
