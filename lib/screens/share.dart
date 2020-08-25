@@ -9,7 +9,9 @@ class sharePage extends StatefulWidget {
 }
 
 class _sharePageState extends State<sharePage> {
-  final TextEditingController _controller_friendUsername = TextEditingController();
+  final TextEditingController _controller_friendUsername =
+      TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     User _user = ModalRoute.of(context).settings.arguments;
@@ -21,33 +23,64 @@ class _sharePageState extends State<sharePage> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.1,
+            ),
+            Container(
+              height: 64.0,
+              padding: EdgeInsets.symmetric(horizontal: 48.0, vertical: 8.0),
+              child: TextFormField(
                 controller: _controller_friendUsername,
-                decoration: InputDecoration(hintText: "Enter your friend's username"),
+                decoration: const InputDecoration(
+                  prefixIcon: Icon(Icons.person),
+                  labelText: "Enter your friend's username *",
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.blue,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.grey,
+                      width: 2.0,
+                    ),
+                  ),
+                ),
               ),
             ),
-            RaisedButton(
-              child: Text('Confirm'),
-              onPressed: () async {
-                await showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (context) => AlertDialog(
-                    content: _addFriend(_user.userId, _controller_friendUsername.text),
-                    actions: <Widget>[
-                      FlatButton(
-                          child: Text("OK"),
-                          onPressed: () {
+            SizedBox(
+              height: 16.0,
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width - 100.0,
+              height: 48.0,
+              child: FlatButton(
+                child: Text(
+                  'Confirm',
+                ),
+                color: Colors.white.withOpacity(0.05),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                    side: BorderSide(color: Colors.black)),
+                onPressed: () async {
+                  await showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (context) => AlertDialog(
+                      content: _addFriend(
+                          _user.userId, _controller_friendUsername.text),
+                      actions: <Widget>[
+                        FlatButton(
+                            child: Text("OK"),
+                            onPressed: () {
                               Navigator.pop(context);
                               _controller_friendUsername.text = "";
-                          }
-                      ),
-                    ],
-                  ),
-                );
-              },
+                            }),
+                      ],
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),

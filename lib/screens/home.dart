@@ -55,26 +55,41 @@ class _homePageState extends State<homePage> {
   }
 
   FutureBuilder _fetchEventTab1(User user) {
-      return FutureBuilder<List<Event>>(
-        future: fetchEvent(user.userId),
-        builder: (BuildContext context, AsyncSnapshot<List<Event>> snapshot) {
-          if (snapshot.hasData) {
-            List<Event> events = snapshot.data;
-            return eventTab(events: events, user: user, viewOnly: false,);
-          } else if (snapshot.hasError) {
-            return Text("${snapshot.error}");
+    return FutureBuilder<List<Event>>(
+      future: fetchEvent(user.userId),
+      builder: (BuildContext context, AsyncSnapshot<List<Event>> snapshot) {
+        if (snapshot.hasData) {
+          List<Event> events = snapshot.data;
+          if (events.length > 0) {
+            return eventTab(
+              events: events,
+              user: user,
+              viewOnly: false,
+            );
+          } else {
+            return Center(
+              child: Text("There is no event, enjoy the day :)"),
+            );
           }
-          return CircularProgressIndicator();
-        },
-      );
+        } else if (snapshot.hasError) {
+          return Text("${snapshot.error}");
+        }
+        return CircularProgressIndicator();
+      },
+    );
   }
+
   FutureBuilder _fetchEventTab2(User user) {
     return FutureBuilder<List<Event>>(
       future: fetchEvent(user.userId),
       builder: (BuildContext context, AsyncSnapshot<List<Event>> snapshot) {
         if (snapshot.hasData) {
           List<Event> events = snapshot.data;
-          return calendarViewTab(events: events, user: user, viewOnly: false,);
+          return calendarViewTab(
+            events: events,
+            user: user,
+            viewOnly: false,
+          );
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
         }
@@ -83,5 +98,3 @@ class _homePageState extends State<homePage> {
     );
   }
 }
-
-

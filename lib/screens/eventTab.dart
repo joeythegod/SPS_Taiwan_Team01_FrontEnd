@@ -6,6 +6,21 @@ import 'package:first_flutter_project/models/friend.dart';
 import 'package:first_flutter_project/https/api.dart';
 import 'package:image_picker/image_picker.dart';
 
+const Map<String, String> monthChar = {
+  "01": "Jan",
+  "02": "Feb",
+  "03": "Mar",
+  "04": "Apr",
+  "05": "May",
+  "06": "Jun",
+  "07": "Jul",
+  "08": "Aug",
+  "09": "Sep",
+  "10": "Oct",
+  "11": "Nov",
+  "12": "Dec",
+};
+
 class eventTab extends StatefulWidget {
   const eventTab({
     Key key,
@@ -58,7 +73,9 @@ class _eventTabState extends State<eventTab> {
                   child: Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: Text(
-                      events[index].startTime.substring(5, 10),
+                      monthChar[events[index].startTime.substring(5, 7)] +
+                          ", " +
+                          events[index].startTime.substring(8, 10),
                       style: TextStyle(color: Colors.black.withOpacity(0.6)),
                     ),
                   ),
@@ -75,8 +92,16 @@ class _eventTabState extends State<eventTab> {
   ListTile _tile(Event event, IconData icon) {
     File _image;
     final picker = ImagePicker();
-    Future _getImage(picker) async {
+    Future _getImageFromCamera(picker) async {
       final pickedFile = await picker.getImage(source: ImageSource.camera);
+      setState(() {
+        if (pickedFile != null) {
+          _image = File(pickedFile.path);
+        }
+      });
+    }
+    Future _getImageFromGallery(picker) async {
+      final pickedFile = await picker.getImage(source: ImageSource.gallery);
       setState(() {
         if (pickedFile != null) {
           _image = File(pickedFile.path);
@@ -105,9 +130,37 @@ class _eventTabState extends State<eventTab> {
                 children: <Widget>[
                   IconButton(
                       iconSize: 18.0,
+                      icon: new Icon(Icons.photo),
+                      onPressed: () async {
+                        await _getImageFromGallery(picker);
+                        if (_image != null) {
+                          print('image select!');
+                          String blobstoreUrl = await getBlobstoreUrl();
+                          await showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (context) => AlertDialog(
+                              content: _uploadImage(
+                                  blobstoreUrl, event.eventId, _image.path),
+                              actions: <Widget>[
+                                FlatButton(
+                                    child: Text("OK"),
+                                    onPressed: () {
+                                      Navigator.pushNamed(context, "/home",
+                                          arguments: widget.user);
+                                    }),
+                              ],
+                            ),
+                          );
+                        } else {
+                          print('no image select!');
+                        }
+                      }),
+                  IconButton(
+                      iconSize: 18.0,
                       icon: new Icon(Icons.photo_camera),
                       onPressed: () async {
-                        await _getImage(picker);
+                        await _getImageFromCamera(picker);
                         if (_image != null) {
                           print('image select!');
                           String blobstoreUrl = await getBlobstoreUrl();

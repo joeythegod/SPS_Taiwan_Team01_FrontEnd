@@ -48,15 +48,19 @@ class _calendarViewTabState extends State<calendarViewTab>
       _eventInstances[date].add(event);
     }
     _selectedEvents = _events[_selectedDay] ?? [];
-    _selectedInstances = _eventInstances[_selectedDay] ?? [];
+    _selectedInstances = _eventInstances[
+    DateTime.parse(_selectedDay.toString().substring(0, 10) + " 00:00:00.000")];
     _calendarController = CalendarController();
 
     _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 400),
+    vsync: this,
+    duration: const Duration(milliseconds: 400),
     );
 
-    _animationController.forward();
+    _animationController.
+    forward
+    (
+    );
   }
 
   @override
@@ -71,17 +75,17 @@ class _calendarViewTabState extends State<calendarViewTab>
     setState(() {
       _selectedEvents = events;
       _selectedInstances = _eventInstances[
-          DateTime.parse(day.toString().substring(0, 10) + " 00:00:00.000")];
+      DateTime.parse(day.toString().substring(0, 10) + " 00:00:00.000")];
     });
   }
 
-  void _onVisibleDaysChanged(
-      DateTime first, DateTime last, CalendarFormat format) {
+  void _onVisibleDaysChanged(DateTime first, DateTime last,
+      CalendarFormat format) {
     print('CALLBACK: _onVisibleDaysChanged');
   }
 
-  void _onCalendarCreated(
-      DateTime first, DateTime last, CalendarFormat format) {
+  void _onCalendarCreated(DateTime first, DateTime last,
+      CalendarFormat format) {
     print('CALLBACK: _onCalendarCreated');
   }
 
@@ -196,8 +200,8 @@ class _calendarViewTabState extends State<calendarViewTab>
         color: _calendarController.isSelected(date)
             ? Colors.brown[500]
             : _calendarController.isToday(date)
-                ? Colors.brown[300]
-                : Colors.blue[400],
+            ? Colors.brown[300]
+            : Colors.blue[400],
       ),
       width: 16.0,
       height: 16.0,
@@ -222,22 +226,12 @@ class _calendarViewTabState extends State<calendarViewTab>
   }
 
   Widget _buildEventList() {
-//    return ListView(
-//      children: _selectedEvents
-//          .map((event) => Container(
-//                decoration: BoxDecoration(
-//                  border: Border.all(width: 0.8),
-//                  borderRadius: BorderRadius.circular(12.0),
-//                ),
-//                margin:
-//                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-//                child: ListTile(
-//                  title: Text(event.toString()),
-//                  onTap: () => print('$event tapped!'),
-//                ),
-//              ))
-//          .toList(),
-//    );
-    return eventTab(events: _selectedInstances, user: widget.user, viewOnly: false,);
+    if (_selectedInstances != null) {
+      return eventTab(
+        events: _selectedInstances, user: widget.user, viewOnly: widget.viewOnly,);
+    }
+    else {
+      return Text("There is no event, enjoy the day :)");
+    }
   }
 }
