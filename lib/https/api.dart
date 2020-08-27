@@ -6,10 +6,12 @@ import 'package:first_flutter_project/models/user.dart';
 import 'package:first_flutter_project/models/friend.dart';
 import 'package:dio/dio.dart';
 
+const backEndUrl = "https://backend-dot-jlee-sps-summer20.df.r.appspot.com/";
+
 // User login
 Future<User> login(String username, String password) async {
   final http.Response response = await http.post(
-    'https://jlee-sps-summer20.df.r.appspot.com/login',
+    '${backEndUrl}login',
     body: {
       'username': username,
       'password': password,
@@ -31,7 +33,7 @@ Future<User> login(String username, String password) async {
 // User register
 Future<User> createUser(String username, String password, String email) async {
   final http.Response response = await http.post(
-    'https://jlee-sps-summer20.df.r.appspot.com/register',
+    '${backEndUrl}register',
     body: {
       'username': username,
       'password': password,
@@ -54,7 +56,7 @@ Future<User> createUser(String username, String password, String email) async {
 // Fetch all events
 Future<List<Event>> fetchEvent(String userId) async {
   final response = await http
-      .get("https://tfang-sps-summer20.appspot.com/event?userId=${userId}");
+      .get("${backEndUrl}event?userId=${userId}");
   if (response.statusCode >= 200 && response.statusCode <= 210) {
     List data = jsonDecode(response.body);
     List<Event> events =
@@ -71,7 +73,7 @@ Future<List<Event>> fetchEvent(String userId) async {
 Future<String> createEvent(String userId, String title, String startTime,
     String endTime, String content) async {
   final http.Response response = await http.post(
-    "https://tfang-sps-summer20.appspot.com/event",
+    "${backEndUrl}event",
     body: {
       'userId': userId,
       'title': title,
@@ -97,7 +99,7 @@ Future<String> createEvent(String userId, String title, String startTime,
 // Delete event
 Future<String> deleteEvent(String userId, String eventId) async {
   final http.Response response = await http.delete(
-      "https://tfang-sps-summer20.appspot.com/event?userId=${userId}&eventId=${eventId}");
+      "${backEndUrl}event?userId=${userId}&eventId=${eventId}");
   if (response.statusCode >= 200 && response.statusCode <= 210) {
     return response.body;
   } else if (response.statusCode >= 500) {
@@ -110,7 +112,7 @@ Future<String> deleteEvent(String userId, String eventId) async {
 // Get blobstore url
 Future<String> getBlobstoreUrl() async {
   final http.Response response = await http
-      .get("https://tfang-sps-summer20.appspot.com/blobstore-upload-url");
+      .get("${backEndUrl}blobstore-upload-url");
   if (response.statusCode >= 200 && response.statusCode <= 210) {
     String data = response.body;
     return data.substring(1, data.length - 2);
@@ -142,7 +144,7 @@ Future<String> uploadImage(
 // share to friend
 Future<String> addFriend(String userId, String friendUsername) async {
   final http.Response response = await http.get(
-      "https://jlee-sps-summer20.df.r.appspot.com/add?userId=${userId}&friendUsername=${friendUsername}");
+      "${backEndUrl}add?userId=${userId}&friendUsername=${friendUsername}");
   if (response.statusCode >= 200 && response.statusCode <= 210) {
     return "ok";
   } else if (response.statusCode == 400) {
@@ -160,7 +162,7 @@ Future<String> addFriend(String userId, String friendUsername) async {
 // Fetch all friends
 Future<List<Friend>> fetchFriend(String userId) async {
   final http.Response response = await http
-      .get("https://jlee-sps-summer20.df.r.appspot.com/query?userId=${userId}");
+      .get("${backEndUrl}query?userId=${userId}");
   if (response.statusCode >= 200 && response.statusCode <= 210) {
     List data = jsonDecode(response.body);
     List<Friend> friends = data.map((friend) => new Friend.fromJson(friend)).toList();
